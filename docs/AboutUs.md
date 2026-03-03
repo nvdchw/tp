@@ -23,9 +23,9 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ### Jane Doe
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/x3boffing.png" width="200px">
 
-[[github](http://github.com/johndoe)]
+[[github](http://github.com/x3boffing)]
 [[portfolio](team/johndoe.md)]
 
 * Role: Team Lead
