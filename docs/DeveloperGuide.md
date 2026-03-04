@@ -274,27 +274,58 @@ _{Explain here how the data archiving feature will be implemented}_
 
 **Target user profile**:
 
-* has a need to manage a significant number of contacts
-* prefer desktop apps over other types
-* can type fast
-* prefers typing to mouse interactions
-* is reasonably comfortable using CLI apps
+* has a need to manage a significant number of client and service contacts
+* frequently conducts home visits and requires quick access to visit details
+* works under time pressure and must efficiently track last and upcoming visits
+* needs to categorise contacts into different roles (e.g., Client, family members, government services)
+* requires reminders for follow-ups and scheduled check-ins
+* prefers a simple, distraction-free desktop application
+* is comfortable using keyboard-driven interfaces and typing commands
+* values speed and efficiency over complex graphical interfaces
+* wants all visit-related information consolidated in one place
 
-**Value proposition**: manage contacts faster than a typical mouse/GUI driven app
+**Value proposition**: Currently, social workers rely on a combination of paper notebooks, 
+calendars and messaging apps to track who they are visiting, where it takes place and the 
+purpose or outcome of each visit. This fragmentation increases administrative workload, 
+raises the risk of missed follow-ups or incomplete records, and reduces overall efficiency. 
+CareSync helps social service workers keep track of their clients and service contact 
+details as well as allow them to easily track upcoming visits with the various families.
+
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                    | I want to …​                 | So that I can…​                                                        |
-|----------|--------------------------------------------|------------------------------|------------------------------------------------------------------------|
-| `* * *`  | new user                                   | see usage instructions       | refer to instructions when I forget how to use the App                 |
-| `* * *`  | user                                       | add a new person             |                                                                        |
-| `* * *`  | user                                       | delete a person              | remove entries that I no longer need                                   |
-| `* * *`  | user                                       | find a person by name        | locate details of persons without having to go through the entire list |
-| `* *`    | user                                       | hide private contact details | minimize chance of someone else seeing them by accident                |
-| `*`      | user with many persons in the address book | sort persons by name         | locate a person easily                                                 |
+| Priority | As a …​                                    | I want to …​                    | So that I can…​                                           |
+|----------|--------------------------------------------|---------------------------------|-----------------------------------------------------------|
+| `* * *` | user | add a contact with basic details | quickly identify who is being visited |
+| `* * *` | user | delete a contact | remove contacts that are no longer needed |
+| `* * *` | user | store an address with each contact | know where to go for home visits |
+| `* * *` | user | set a visit date | know when to go for home visits |
+| `* * *` | user | see visit date and time clearly | manage daily schedule effectively |
+| `* * *` | user | add tags to differentiate clients and services | retrieve relevant contact details quickly |
+| `* * *` | user | add tags to differentiate case ID / client groups | retrieve relevant contact details quickly |
+| `* * *` | user | filter contacts based on tags | quickly view related contacts based on tag |
+| `* * *` | user | search for a name | reference contacts clearly |
+| `* *` | user | see upcoming visits alongside past ones | plan follow-ups effectively |
+| `* *` | user | have a clean and simple layout | find information quickly between visits |
+| `* *` | user | sort contacts by name or ID | find contacts easily |
+| `* *` | user | mark a contact’s status (e.g. stable, urgent) | prioritise my work |
+| `* *` | user | add a visit note to a contact | remember the purpose of the visit |
+| `* *` | user | reuse past commands | execute commands faster |
+| `* *` | user | undo commands | undo any wrong changes  |
+| `* *` | expert user | add aliases to commands | execute commands faster |
+| `* *` | new user | see sample commands | know valid command formats |
+| `*` | user | add a specific visit location | quickly reference where the visit takes place |
+| `*` | user | set visit type (e.g. consultation, remote) | understand the nature of the visit |
+| `*` | user | specify the visit duration | plan my time realistically |
+| `*` | user | view completed visits | understand my visit history |
+| `*` | user | mark a visit as planned, completed, or cancelled | track visit status and outcomes |
+| `*` | user | be sure that visit records remains unchanged | be held accountable for the visit |
+| `*` | new user | view a list of common commands when opening the app | refer to instructions without using an external manual |
+| `*` | new user | transfer my contact details from my phone’s contact list to CareSync | transition to using CareSync easily |
+
 
 *{More to be added}*
 
@@ -321,6 +352,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 2a. CareSync detects invalid input format.
+
    * 2a1. CareSync displays an error message.
    * 2a2. User re-enters data.
      
@@ -359,6 +391,7 @@ If successful, the selected contact’s details will be updated and saved.
 **Extensions**
 
 * 3a. No matching contact is found.
+
    * 3a1. CareSync informs the user that no match exists.
      
      Use case ends.
@@ -394,6 +427,7 @@ If successful, the contact will be permanently removed from CareSync.
 **Extensions**
 
 * 3a. User entered an invalid ID.
+
    * 3a1. CareSync displays an error message.
    * 3a2. User re-enters data.
      
@@ -401,20 +435,111 @@ If successful, the contact will be permanently removed from CareSync.
      
      Use case resumes from step 4.
 
+**Use case: UC4 - Search Contact via Name**
+
+**Guarantee:** Matching contact(s), if any, are displayed to the user.
+
+**MSS**
+
+1.  User specifies the name to be searched.
+2.  CareSync validates the contact's existence.
+3.  CareSync retrieves the matching contact(s).
+4.  CareSync displays the search results.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. Not matching contact is found.
+
+    * 2a1. CareSync displays a message indicating no results.
+
+      Use case ends.
+
+**Use case: UC5- Search Contact via Tag**
+
+**Guarantee:** Matching contact(s), if any, are displayed to the user.
+
+**MSS**
+
+1.  User specifies the tag to be searched.
+2.  CareSync validates the contact's existence.
+3.  CareSync retrieves the matching contact(s).
+4.  CareSync displays the search results.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. Not matching contact is found.
+
+    * 2a1. CareSync displays a message indicating no results.
+
+      Use case ends.
+
+**Use case: UC6- Set Visit Date and Time**
+
+**Precondition:** Contact exists in CareSync.
+
+**Guarantee:** If successful, the next visit date and time for the contact is updated and saved.
+
+**MSS**
+
+1.  CareSync displays contact(s).
+2.  User specifies the ID of the contact and the fields to be updated (e.g. visit date).
+3.  CareSync validates the date format.
+4.  CareSync updates the next visit date and time for the contact.
+5.  CareSync displays a success message.
+
+    Use case ends.
+
+**Extensions**
+
+* 3a. CareSync detects invalid input format.
+
+    * 3a1. CareSync displays an error message.
+    * 3a2. User re-enters correct data.
+
+      Steps 3a1-3a2 are repeated until the data entered is valid.
+
+      Use case resumes from step 4.
+
 *{More to be added}*
 
 ### Non-Functional Requirements
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+1. Should work on any mainstream OS as long as it has Java 17 or above installed. 
+2. A user with above average typing speed for regular English text (i.e. not code, not system 
+admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse. 
+3. The system should respond to user commands within 2 seconds under normal usage.
+4. The system should support at least 20 contacts without noticeable performance degradation.
+5. Filtering and search operations should complete within 2 seconds. 
+6. The system should be able to load stored data within 3 seconds upon startup.
+7. The application should not crash upon receiving malformed data.
+8. Error messages shall be clear and actionable (e.g., specify which field is invalid).
+9. Command syntax shall be consistent and predictable across features.
+10. The system shall automatically persist data after every valid modification.
+11. Completed visits shall not be modified without explicit action.
+12. Contact names shall not be empty.
+13. Phone numbers shall follow a defined format. 
+14. Dates and times shall follow a consistent format. 
+15. Duplicate contacts shall not be allowed unless explicitly permitted.
+14. The system architecture should allow future expansion of features (e.g., additional 
+commands or data fields) without requiring major restructuring of existing components.
 
 *{More to be added}*
 
 ### Glossary
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
-* **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Tag**: A label that can be assigned to a contact to categorise them.
+* **ID**: The currently displayed list number of the specific contact.
+* **Case ID**: A Case ID is a unique identifier assigned to a specific client 
+case or record within CareSync. It allows users to track and reference a particular 
+case efficiently, ensuring that all family members that are associated with the 
+clients are displayed.
+* **Command**: An instruction entered by the user to execute a specific action.
+
 
 --------------------------------------------------------------------------------------------------------------------
 
