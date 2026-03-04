@@ -302,30 +302,74 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 (For all use cases below, the **System** is the `AddressBook` and the **Actor** is the `user`, unless specified otherwise)
 
-**Use case: Delete a person**
+**Use case: UC4 - Search Contact via Name**
+
+**Guarantee:** Matching contact(s), if any, are displayed to the user.
 
 **MSS**
 
-1.  User requests to list persons
-2.  AddressBook shows a list of persons
-3.  User requests to delete a specific person in the list
-4.  AddressBook deletes the person
+1.  User specifies the name to be searched.
+2.  CareSync validates the contact's existence.
+3.  CareSync retrieves the matching contact(s).
+4.  CareSync displays the search results.
 
     Use case ends.
 
 **Extensions**
 
-* 2a. The list is empty.
+* 2a. Not matching contact is found.
 
-  Use case ends.
+    * 2a1. CareSync displays a message indicating no results.
 
-* 3a. The given index is invalid.
+      Use case ends.
 
-    * 3a1. AddressBook shows an error message.
+**Use case: UC5- Search Contact via Tag**
 
-      Use case resumes at step 2.
+**Guarantee:** Matching contact(s), if any, are displayed to the user.
 
-*{More to be added}*
+**MSS**
+
+1.  User specifies the tag to be searched.
+2.  CareSync validates the contact's existence.
+3.  CareSync retrieves the matching contact(s).
+4.  CareSync displays the search results.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. Not matching contact is found.
+
+    * 2a1. CareSync displays a message indicating no results.
+
+      Use case ends.
+
+**Use case: UC6- Set Visit Date and Time**
+
+**Precondition:** Contact exists in CareSync.
+
+**Guarantee:** If successful, the next visit date and time for the contact is updated and saved.
+
+**MSS**
+
+1.  CareSync displays contact(s).
+2.  User specifies the ID of the contact and the fields to be updated (e.g. visit date).
+3.  CareSync validates the date format.
+4.  CareSync updates the next visit date and time for the contact.
+5.  CareSync displays a success message.
+
+    Use case ends.
+
+**Extensions**
+
+* 3a. CareSync detects invalid input format.
+
+    * 3a1. CareSync displays an error message.
+    * 3a2. User re-enters correct data.
+
+      Steps 3a1-3a2 are repeated until the data entered is valid.
+
+      Use case resumes from step 4.
 
 ### Non-Functional Requirements
 
