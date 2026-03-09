@@ -45,6 +45,10 @@ public class Messages {
                 .append(person.getAddress())
                 .append("; Tags: ");
         person.getTags().forEach(builder::append);
+        if (person.getVisitDateTime().isPresent()) {
+            builder.append("; Next Visit: ")
+                    .append(person.getVisitDateTime().getDisplayValue());
+        }
         return builder.toString();
     }
 
