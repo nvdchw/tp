@@ -92,14 +92,19 @@ public class VisitDateTime {
         if (!(other instanceof VisitDateTime)) {
             return false;
         }
-
         VisitDateTime otherVisitDateTime = (VisitDateTime) other;
+        if (value == null && otherVisitDateTime.value == null) {
+            return true;
+        }
+        if (value == null || otherVisitDateTime.value == null) {
+            return false;
+        }
         return value.equals(otherVisitDateTime.value);
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return value == null ? 0 : value.hashCode();
     }
 }
 

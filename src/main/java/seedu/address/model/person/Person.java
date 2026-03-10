@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import seedu.address.commons.util.ToStringBuilder;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -125,14 +124,20 @@ public class Person {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-                .add("name", name)
-                .add("phone", phone)
-                .add("email", email)
-                .add("address", address)
-                .add("tags", tags)
-                .add("visitDateTime", visitDateTime)
-                .toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getCanonicalName()).append("{");
+        sb.append("name=").append(name);
+        sb.append(", phone=").append(phone);
+        sb.append(", email=").append(email);
+        sb.append(", address=").append(address);
+        sb.append(", tags=").append(tags);
+
+        if (visitDateTime.isPresent()) {
+            sb.append(", visitDateTime=").append(visitDateTime);
+        }
+
+        sb.append("}");
+        return sb.toString();
     }
 
 }
