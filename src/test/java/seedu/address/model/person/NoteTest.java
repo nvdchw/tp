@@ -1,5 +1,6 @@
 package seedu.address.model.person;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -43,5 +44,11 @@ public class NoteTest {
 
         // different values -> returns false
         assertFalse(note.equals(new Note("Bye")));
+    }
+
+    @Test
+    public void hashCodeMethod() {
+        Note note = new Note("Test");
+        assertEquals(note.hashCode(), new Note("Test").hashCode());
     }
 }
