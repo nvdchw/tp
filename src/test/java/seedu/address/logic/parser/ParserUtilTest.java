@@ -18,6 +18,7 @@ import seedu.address.logic.parser.exceptions.ParseException;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Name;
+import seedu.address.model.person.Note;
 import seedu.address.model.person.Phone;
 import seedu.address.model.person.VisitDateTime;
 import seedu.address.model.tag.Tag;
@@ -34,6 +35,7 @@ public class ParserUtilTest {
     private static final String VALID_PHONE = "123456";
     private static final String VALID_ADDRESS = "123 Main Street #0505";
     private static final String VALID_EMAIL = "rachel@example.com";
+    private static final String VALID_NOTE = "Meet client at lobby.";
     private static final String VALID_TAG_1 = "friend";
     private static final String VALID_TAG_2 = "neighbour";
     private static final String VALID_VISIT_DATE_TIME = "2026-03-15 14:30";
@@ -152,6 +154,21 @@ public class ParserUtilTest {
         assertEquals(expectedEmail, ParserUtil.parseEmail(emailWithWhitespace));
     }
 
+    @Test public void parseNote_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> ParserUtil.parseNote(null));
+    }
+
+    @Test public void parseNote_validValueWithoutWhitespace_returnsNote() throws Exception {
+        Note expectedNote = new Note(VALID_NOTE);
+        assertEquals(expectedNote, ParserUtil.parseNote(VALID_NOTE));
+    }
+
+    @Test public void parseNote_validValueWithWhitespace_returnsTrimmedNote() throws Exception {
+        String noteWithWhitespace = WHITESPACE + VALID_NOTE + WHITESPACE;
+        Note expectedNote = new Note(VALID_NOTE);
+        assertEquals(expectedNote, ParserUtil.parseNote(noteWithWhitespace));
+    }
+
     @Test
     public void parseTag_null_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> ParserUtil.parseTag(null));
@@ -237,5 +254,17 @@ public class ParserUtilTest {
     @Test
     public void parseVisitDateTime_invalidInput_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseVisitDateTime("invalid input"));
+    }
+
+    @Test
+    public void parseVisitDateTime_emptyString_returnsEmptyVisitDateTime() throws Exception {
+        VisitDateTime expected = new VisitDateTime();
+        assertEquals(expected, ParserUtil.parseVisitDateTime(""));
+    }
+
+    @Test
+    public void parseVisitDateTime_whitespaceOnly_returnsEmptyVisitDateTime() throws Exception {
+        VisitDateTime expected = new VisitDateTime();
+        assertEquals(expected, ParserUtil.parseVisitDateTime("   "));
     }
 }

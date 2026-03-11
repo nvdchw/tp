@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.person.Person;
 import seedu.address.testutil.PersonBuilder;
@@ -62,5 +64,14 @@ public class MessagesTest {
         assertTrue(result.startsWith(Messages.MESSAGE_DUPLICATE_FIELDS));
         assertTrue(result.contains("n/"));
         assertTrue(result.contains("p/"));
+    }
+
+    @Test
+    public void getErrorMessageForDuplicatePrefixes_duplicatePrefixes_formatsUniqueFields() {
+        String actual = Messages.getErrorMessageForDuplicatePrefixes(PREFIX_NAME, PREFIX_PHONE, PREFIX_NAME);
+
+        assertTrue(actual.startsWith(Messages.MESSAGE_DUPLICATE_FIELDS));
+        assertTrue(actual.contains(PREFIX_NAME.toString()));
+        assertTrue(actual.contains(PREFIX_PHONE.toString()));
     }
 }

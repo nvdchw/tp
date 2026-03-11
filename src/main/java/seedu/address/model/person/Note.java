@@ -12,7 +12,7 @@ public class Note {
     /*
      * Allows any character, also empty strings.
      */
-    public static final String VALIDATION_REGEX = ".*";
+    public static final String VALIDATION_REGEX = "^[\\p{L}\\p{N}\\p{P}\\p{S}\\p{Zs}\\r\\n\\t]{0,500}$";
     public final String value;
 
     /**
