@@ -96,4 +96,21 @@ public class PersonTest {
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress() + ", tags=" + ALICE.getTags() + "}";
         assertEquals(expected, ALICE.toString());
     }
+
+    @Test
+    public void toStringMethod_withVisitDateTime() {
+        Person aliceWithVisitDateTime = new PersonBuilder(ALICE)
+                .withVisitDateTime("2026-12-01 14:00")
+                .build();
+
+        String expected = Person.class.getCanonicalName()
+                + "{name=" + aliceWithVisitDateTime.getName()
+                + ", phone=" + aliceWithVisitDateTime.getPhone()
+                + ", email=" + aliceWithVisitDateTime.getEmail()
+                + ", address=" + aliceWithVisitDateTime.getAddress()
+                + ", tags=" + aliceWithVisitDateTime.getTags()
+                + ", visitDateTime=" + aliceWithVisitDateTime.getVisitDateTime()
+                + "}";
+        assertEquals(expected, aliceWithVisitDateTime.toString());
+    }
 }
