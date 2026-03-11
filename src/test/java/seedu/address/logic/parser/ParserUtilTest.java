@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
@@ -218,5 +219,23 @@ public class ParserUtilTest {
         String visitDateTimeWithWhitespace = WHITESPACE + VALID_VISIT_DATE_TIME + WHITESPACE;
         VisitDateTime expectedVisitDateTime = new VisitDateTime(VALID_VISIT_DATE_TIME);
         assertEquals(expectedVisitDateTime, ParserUtil.parseVisitDateTime(visitDateTimeWithWhitespace));
+    }
+
+    @Test
+    public void parseVisitDateTime_blankAfterTrim_returnsEmptyVisitDateTime() throws Exception {
+        VisitDateTime visitDateTime = ParserUtil.parseVisitDateTime("   ");
+        assertFalse(visitDateTime.isPresent());
+        assertEquals("", visitDateTime.toString());
+    }
+
+    @Test
+    public void parseVisitDateTime_validInput_success() throws Exception {
+        VisitDateTime visitDateTime = ParserUtil.parseVisitDateTime("2026-12-01 14:00");
+        assertTrue(visitDateTime.isPresent());
+    }
+
+    @Test
+    public void parseVisitDateTime_invalidInput_throwsParseException() {
+        assertThrows(ParseException.class, () -> ParserUtil.parseVisitDateTime("invalid input"));
     }
 }
