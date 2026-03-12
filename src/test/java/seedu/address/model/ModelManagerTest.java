@@ -129,4 +129,36 @@ public class ModelManagerTest {
         differentUserPrefs.setAddressBookFilePath(Paths.get("differentFilePath"));
         assertFalse(modelManager.equals(new ModelManager(addressBook, differentUserPrefs)));
     }
+
+    @Test
+    public void sortFilteredPersonList_sortByName_success() {
+        AddressBook addressBook = new AddressBookBuilder()
+                .withPerson(BENSON)
+                .withPerson(ALICE)
+                .build();
+
+        ModelManager model = new ModelManager(addressBook, new UserPrefs());
+
+        model.sortFilteredPersonList("name");
+
+        assertEquals(ALICE, model.getFilteredPersonList().get(0));
+        assertEquals(BENSON, model.getFilteredPersonList().get(1));
+    }
+
+    @Test
+    public void resetSort_afterSorting_restoresOriginalOrder() {
+        AddressBook addressBook = new AddressBookBuilder()
+                .withPerson(BENSON)
+                .withPerson(ALICE)
+                .build();
+
+        ModelManager model = new ModelManager(addressBook, new UserPrefs());
+
+        model.sortFilteredPersonList("name");
+        model.resetSort();
+
+        assertEquals(BENSON, model.getFilteredPersonList().get(0));
+        assertEquals(ALICE, model.getFilteredPersonList().get(1));
+    }
+
 }

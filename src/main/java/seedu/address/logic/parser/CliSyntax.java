@@ -14,4 +14,6 @@ public class CliSyntax {
     public static final Prefix PREFIX_TAG = new Prefix("t/");
     public static final Prefix PREFIX_VISIT = new Prefix("v/");
 
+    /* Prefix definition for List Sorting */
+    public static final Prefix PREFIX_SORT = new Prefix("s/");
 }

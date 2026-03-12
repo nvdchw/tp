@@ -84,4 +84,15 @@ public interface Model {
      * @throws NullPointerException if {@code predicate} is null.
      */
     void updateFilteredPersonList(Predicate<Person> predicate);
+
+    /**
+     * Sorts the filtered person list by the specified {@code field}.
+     * The ordering of the current filtered view will be updated accordingly.
+     */
+    default void sortFilteredPersonList(String field){}
+
+    /**
+     * Resets the sorting of the filtered person list.
+     */
+    default void resetSort(){}
 }

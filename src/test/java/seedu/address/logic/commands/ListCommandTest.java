@@ -36,4 +36,13 @@ public class ListCommandTest {
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
         assertCommandSuccess(new ListCommand(), model, ListCommand.MESSAGE_SUCCESS, expectedModel);
     }
+
+    //Add test for Sorting List by names
+    @Test
+    public void execute_listSortedByName_success() {
+        ListCommand command = new ListCommand("name");
+
+        assertCommandSuccess(command, model,
+                String.format(ListCommand.MESSAGE_SORT_SUCCESS, "name"), model);
+    }
 }
