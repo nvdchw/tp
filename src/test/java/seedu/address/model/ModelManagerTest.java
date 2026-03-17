@@ -189,7 +189,7 @@ public class ModelManagerTest {
 
         assertEquals(personWithEarlierVisit, model.getFilteredPersonList().get(0));
         assertEquals(personWithLaterVisit, model.getFilteredPersonList().get(1));
-        assertEquals(personWithoutVisit, model.getFilteredPersonList().get(2)); // null at bottom
+        assertEquals(personWithoutVisit, model.getFilteredPersonList().get(2));
     }
 
 }
