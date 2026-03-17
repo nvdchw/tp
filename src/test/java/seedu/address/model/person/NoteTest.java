@@ -51,4 +51,10 @@ public class NoteTest {
         Note note = new Note("Test");
         assertEquals(note.hashCode(), new Note("Test").hashCode());
     }
+
+    @Test
+    public void isPresent() {
+        assertFalse(new Note("").isPresent());
+        assertTrue(new Note("Has note").isPresent());
+    }
 }
