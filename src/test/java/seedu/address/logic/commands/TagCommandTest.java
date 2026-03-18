@@ -89,6 +89,20 @@ public class TagCommandTest {
     }
 
     @Test
+    public void execute_tagAlreadyExists_throwsCommandException() {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        Tag existingTag = firstPerson.getTags().iterator().next();
+
+        Set<Tag> tagsToAdd = new HashSet<>();
+        tagsToAdd.add(existingTag);
+
+        TagCommand tagCommand = new TagCommand(INDEX_FIRST_PERSON, tagsToAdd, new HashSet<>());
+        String expectedMessage = "The tag [" + existingTag.tagName + "] already exists for this person.";
+
+        assertCommandFailure(tagCommand, model, expectedMessage);
+    }
+
+    @Test
     public void execute_invalidIndex_throwsCommandException() {
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         TagCommand tagCommand = new TagCommand(outOfBoundIndex, new HashSet<>(), new HashSet<>());
