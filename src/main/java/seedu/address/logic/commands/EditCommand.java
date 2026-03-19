@@ -7,6 +7,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NOTE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_VISIT;
 import static seedu.address.model.Model.PREDICATE_SHOW_ALL_PERSONS;
 
 import java.util.Collections;
@@ -28,6 +29,7 @@ import seedu.address.model.person.Name;
 import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.VisitDateTime;
 import seedu.address.model.tag.Tag;
 
 /**
@@ -46,6 +48,7 @@ public class EditCommand extends Command {
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_NOTE + "NOTE] "
+            + "[" + PREFIX_VISIT + "VISIT_DATE_TIME] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
             + PREFIX_PHONE + "91234567 "
@@ -103,9 +106,12 @@ public class EditCommand extends Command {
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         Note updatedNote = editPersonDescriptor.getNote().orElse(personToEdit.getNote());
+        VisitDateTime updatedVisitDateTime = editPersonDescriptor.getVisitDateTime()
+            .orElse(personToEdit.getVisitDateTime());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress, updatedNote, updatedTags);
+        return new Person(updatedName, updatedPhone, updatedEmail, updatedAddress,
+            updatedNote, updatedTags, updatedVisitDateTime);
     }
 
     @Override
@@ -142,6 +148,7 @@ public class EditCommand extends Command {
         private Email email;
         private Address address;
         private Note note;
+        private VisitDateTime visitDateTime;
         private Set<Tag> tags;
 
         public EditPersonDescriptor() {}
@@ -156,6 +163,7 @@ public class EditCommand extends Command {
             setEmail(toCopy.email);
             setAddress(toCopy.address);
             setNote(toCopy.note);
+            setVisitDateTime(toCopy.visitDateTime);
             setTags(toCopy.tags);
         }
 
@@ -163,7 +171,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, note, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, email, address, note, visitDateTime, tags);
         }
 
         public void setName(Name name) {
@@ -206,6 +214,14 @@ public class EditCommand extends Command {
             return Optional.ofNullable(note);
         }
 
+        public void setVisitDateTime(VisitDateTime visitDateTime) {
+            this.visitDateTime = visitDateTime;
+        }
+
+        public Optional<VisitDateTime> getVisitDateTime() {
+            return Optional.ofNullable(visitDateTime);
+        }
+
         /**
          * Sets {@code tags} to this object's {@code tags}.
          * A defensive copy of {@code tags} is used internally.
@@ -240,6 +256,7 @@ public class EditCommand extends Command {
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
                     && Objects.equals(note, otherEditPersonDescriptor.note)
+                    && Objects.equals(visitDateTime, otherEditPersonDescriptor.visitDateTime)
                     && Objects.equals(tags, otherEditPersonDescriptor.tags);
         }
 
@@ -251,6 +268,7 @@ public class EditCommand extends Command {
                     .add("email", email)
                     .add("address", address)
                     .add("note", note)
+                    .add("visitDateTime", visitDateTime)
                     .add("tags", tags)
                     .toString();
         }

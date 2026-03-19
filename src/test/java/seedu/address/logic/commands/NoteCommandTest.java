@@ -18,6 +18,7 @@ import seedu.address.model.ModelManager;
 import seedu.address.model.UserPrefs;
 import seedu.address.model.person.Note;
 import seedu.address.model.person.Person;
+import seedu.address.model.person.VisitDateTime;
 import seedu.address.testutil.PersonBuilder;
 
 public class NoteCommandTest {
@@ -37,6 +38,21 @@ public class NoteCommandTest {
         expectedModel.setPerson(firstPerson, editedPerson);
 
         assertCommandSuccess(noteCommand, model, expectedMessage, expectedModel);
+    }
+
+    @Test
+    public void execute_addNotePreservesVisitDateTime_success() throws Exception {
+        Person firstPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        String existingVisit = "2026-12-01 14:00";
+        Person personWithVisit = new PersonBuilder(firstPerson).withVisitDateTime(existingVisit).build();
+        model.setPerson(firstPerson, personWithVisit);
+
+        NoteCommand noteCommand = new NoteCommand(INDEX_FIRST_PERSON, new Note("Some test notes"));
+        noteCommand.execute(model);
+
+        Person result = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
+        assertTrue(result.getVisitDateTime().isPresent());
+        assertTrue(result.getVisitDateTime().equals(new VisitDateTime(existingVisit)));
     }
 
     @Test
