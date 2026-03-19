@@ -127,13 +127,15 @@ Format: `find n/KEYWORD [MORE_KEYWORDS]` OR `find t/TAG`
 * Persons matching at least one keyword will be returned (i.e. `OR` search).
   e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
 * **For Tag**, the search for Tag will loop through all persons and find based on Tag name
-* Tag search is case-insensitive. e.g `family` will match `Family`
-* Tag search can ONLY search one tag at a time
+* Tag search is case-insensitive. e.g `FAMILY` will match `family`
+* Tag search can ONLY search **one tag** at a time
 
 Examples:
 * `find n/John` returns `john` and `John Doe`
 * `find n/alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
+* `find t/friends` returns ALL contacts with `friends` tag (case-insensitive)
+  ![result for 'find t/friends'](images/findFriendsTagResult.png)
 
 ### Deleting a person : `delete`
 
