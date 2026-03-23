@@ -1,6 +1,7 @@
 package seedu.address.logic.parser;
 
 import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.logic.Messages.getErrorMessageForDuplicatePrefixes;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NOTE;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
@@ -43,5 +44,18 @@ public class NoteCommandParserTest {
 
         // no note prefix
         assertParseFailure(parser, String.valueOf(targetIndex.getOneBased()), expectedMessage);
+    }
+
+    @Test
+    public void parse_duplicateNotePrefix_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+
+        assertParseFailure(parser,
+                targetIndex.getOneBased() + " " + PREFIX_NOTE + "first " + PREFIX_NOTE + "second",
+                getErrorMessageForDuplicatePrefixes(PREFIX_NOTE));
+
+        assertParseFailure(parser,
+                targetIndex.getOneBased() + " " + PREFIX_NOTE + " " + PREFIX_NOTE,
+                getErrorMessageForDuplicatePrefixes(PREFIX_NOTE));
     }
 }

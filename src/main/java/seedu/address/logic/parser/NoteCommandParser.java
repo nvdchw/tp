@@ -23,6 +23,7 @@ public class NoteCommandParser implements Parser<NoteCommand> {
     public NoteCommand parse(String args) throws ParseException {
         requireNonNull(args);
         ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NOTE);
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NOTE);
         Index index;
 
         try {
