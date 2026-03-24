@@ -130,7 +130,7 @@ public class PersonBuilder {
      * Builds and returns the {@code Person} object.
      */
     public Person build() {
-        return new Person(name, phone, email, address, note, tags, visitDateTime);
+        return new Person(name, phone, email, address, note, tags, visitDateTime, isArchived);
     }
 
 }

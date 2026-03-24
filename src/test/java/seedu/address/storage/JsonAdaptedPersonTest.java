@@ -163,7 +163,8 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_archivedPerson_returnsArchived() throws Exception {
         Person archivedPerson = new Person(BENSON.getName(), BENSON.getPhone(), BENSON.getEmail(),
-                BENSON.getAddress(), BENSON.getNote(), BENSON.getTags(), BENSON.getVisitDateTime());
+                BENSON.getAddress(), BENSON.getNote(), BENSON.getTags(), BENSON.getVisitDateTime(),
+                BENSON.isArchived());
         archivedPerson.setArchived(true);
 
         JsonAdaptedPerson adaptedPerson = new JsonAdaptedPerson(archivedPerson);
@@ -187,7 +188,8 @@ public class JsonAdaptedPersonTest {
     @Test
     public void toModelType_unarchivedPerson_returnsUnarchived() throws Exception {
         Person person = new Person(BENSON.getName(), BENSON.getPhone(), BENSON.getEmail(),
-                BENSON.getAddress(), BENSON.getNote(), BENSON.getTags(), BENSON.getVisitDateTime());
+                BENSON.getAddress(), BENSON.getNote(), BENSON.getTags(), BENSON.getVisitDateTime(),
+                BENSON.isArchived());
         person.setArchived(false);
 
         JsonAdaptedPerson adaptedPerson = new JsonAdaptedPerson(person);

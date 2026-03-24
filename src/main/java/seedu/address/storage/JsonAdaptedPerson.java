@@ -142,8 +142,7 @@ class JsonAdaptedPerson {
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
         Person person = new Person(modelName, modelPhone, modelEmail, modelAddress, modelNote, modelTags,
-                modelVisitDateTime);
-        person.setArchived(isArchived);
+                modelVisitDateTime, isArchived);
         return person;
     }
 
