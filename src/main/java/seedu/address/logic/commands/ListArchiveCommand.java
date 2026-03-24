@@ -4,6 +4,9 @@ import static java.util.Objects.requireNonNull;
 
 import seedu.address.model.Model;
 
+/**
+ * Lists all archived persons in the address book to the user.
+ */
 public class ListArchiveCommand extends Command {
 
     public static final String COMMAND_WORD = "list-archive";
