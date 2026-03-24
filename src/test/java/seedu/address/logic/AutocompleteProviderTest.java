@@ -49,6 +49,16 @@ public class AutocompleteProviderTest {
     }
 
     @Test
+    public void suggestCompletion_nullInput_returnsNoSuggestion() {
+        assertTrue(AutocompleteProvider.suggestCompletion(null).isEmpty());
+    }
+
+    @Test
+    public void suggestCompletion_whitespaceOnlyInput_returnsNoSuggestion() {
+        assertTrue(AutocompleteProvider.suggestCompletion("   ").isEmpty());
+    }
+
+    @Test
     public void suggestCompletion_findCommandPrefixSuggestions_work() {
         assertEquals("find n/", AutocompleteProvider.suggestCompletion("find ").orElseThrow());
         assertEquals("find t/", AutocompleteProvider.suggestCompletion("find t").orElseThrow());
@@ -247,6 +257,16 @@ public class AutocompleteProviderTest {
     @Test
     public void suggestCompletion_invalidCommandWord_returnsEmpty() {
         assertTrue(AutocompleteProvider.suggestCompletion("unknown ").isEmpty());
+    }
+
+    @Test
+    public void suggestCompletion_unknownCommandWithArgs_returnsEmpty() {
+        assertTrue(AutocompleteProvider.suggestCompletion("unknown something").isEmpty());
+    }
+
+    @Test
+    public void suggestCompletion_repeatablePrefixFullyTyped_returnsNoSuggestion() {
+        assertTrue(AutocompleteProvider.suggestCompletion("add t/").isEmpty());
     }
 
     @Test
