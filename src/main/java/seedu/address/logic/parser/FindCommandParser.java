@@ -21,26 +21,27 @@ public class FindCommandParser implements Parser<FindCommand> {
      * @throws ParseException if the user input does not conform the expected format
      */
     public FindCommand parse(String args) throws ParseException {
-        ArgumentMultimap argMultimap =
-                ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG);
+        ArgumentMultimap argMultimap = ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG);
 
-        // Checks if there exist any tags for finding
-        if (argMultimap.getValue(PREFIX_NAME).isPresent()) {
-            String keyword = argMultimap.getValue(PREFIX_NAME).get();
-            NameContainsKeywordsPredicate predicate =
-                    new NameContainsKeywordsPredicate(Arrays.asList(keyword.split("\\s+")));
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_TAG);
 
-            return new FindCommand(predicate);
+        boolean hasName = argMultimap.getValue(PREFIX_NAME).isPresent();
+        boolean hasTag = argMultimap.getValue(PREFIX_TAG).isPresent();
 
-        } else if (argMultimap.getValue(PREFIX_TAG).isPresent()) {
-            String tag = argMultimap.getValue(PREFIX_TAG).get();
-            TagContainsPredicate predicate = new TagContainsPredicate(tag);
-
-            return new FindCommand(predicate);
-
-        } else {
+        if (hasName == hasTag) { // both true or both false
             throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
         }
+
+        if (hasName) {
+            String keyword = argMultimap.getValue(PREFIX_NAME).get().trim();
+            NameContainsKeywordsPredicate predicate =
+                    new NameContainsKeywordsPredicate(Arrays.asList(keyword.split("\\s+")));
+            return new FindCommand(predicate);
+        }
+
+        String tag = argMultimap.getValue(PREFIX_TAG).get().trim();
+        TagContainsPredicate predicate = new TagContainsPredicate(tag);
+        return new FindCommand(predicate);
     }
 
 }
