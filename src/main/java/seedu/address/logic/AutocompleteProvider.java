@@ -136,7 +136,9 @@ public final class AutocompleteProvider {
     }
 
     private static Optional<String> suggestArgumentCompletion(String input) {
+        assert input != null : "suggestArgumentCompletion input must not be null";
         int firstWhitespaceIndex = firstWhitespaceIndex(input);
+        assert firstWhitespaceIndex >= 0 : "suggestArgumentCompletion expects command + whitespace + args";
         String commandWord = input.substring(0, firstWhitespaceIndex);
         AutocompletePrefixConfig config = AUTOCOMPLETE_PREFIX_CONFIGS.get(commandWord);
         if (config == null || config.prefixes().isEmpty()) {
@@ -221,6 +223,7 @@ public final class AutocompleteProvider {
     }
 
     private static String removeIndexToken(String args) {
+        assert args != null : "removeIndexToken args must not be null";
         String trimmed = args.stripLeading();
         int tokenEnd = tokenEndIndex(trimmed);
         if (tokenEnd >= trimmed.length()) {
@@ -231,12 +234,14 @@ public final class AutocompleteProvider {
     }
 
     private static String firstToken(String args) {
+        assert args != null : "firstToken args must not be null";
         String trimmed = args.stripLeading();
         int tokenEnd = tokenEndIndex(trimmed);
         return trimmed.substring(0, tokenEnd);
     }
 
     private static int tokenEndIndex(String value) {
+        assert value != null : "tokenEndIndex value must not be null";
         for (int i = 0; i < value.length(); i++) {
             if (Character.isWhitespace(value.charAt(i))) {
                 return i;
