@@ -45,6 +45,38 @@ public class ListArchiveCommandTest {
         assertCommandSuccess(new ListArchiveCommand(), model, ListArchiveCommand.MESSAGE_SUCCESS, expectedModel);
     }
 
+    @Test
+    public void equals_sameCommand_returnsTrue() {
+        ListArchiveCommand command1 = new ListArchiveCommand();
+        ListArchiveCommand command2 = new ListArchiveCommand();
+        assert command1.equals(command2);
+    }
+
+    @Test
+    public void equals_sameObject_returnsTrue() {
+        ListArchiveCommand command = new ListArchiveCommand();
+        assert command.equals(command);
+    }
+
+    @Test
+    public void equals_differentType_returnsFalse() {
+        ListArchiveCommand command = new ListArchiveCommand();
+        assert !command.equals(1);
+    }
+
+    @Test
+    public void equals_null_returnsFalse() {
+        ListArchiveCommand command = new ListArchiveCommand();
+        assert !command.equals(null);
+    }
+
+    @Test
+    public void hashCode_equalObjects_sameHashCode() {
+        ListArchiveCommand command1 = new ListArchiveCommand();
+        ListArchiveCommand command2 = new ListArchiveCommand();
+        assert command1.hashCode() == command2.hashCode();
+    }
+
     /**
      * Returns a fresh AddressBook with cloned typical persons to avoid mutating shared test fixtures.
      */

@@ -11,11 +11,22 @@ public class ListArchiveCommand extends Command {
 
     public static final String COMMAND_WORD = "list-archive";
     public static final String MESSAGE_SUCCESS = "Listed all archived persons";
+    public static final String MESSAGE_USAGE = COMMAND_WORD;
 
     @Override
     public CommandResult execute(Model model) {
         requireNonNull(model);
         model.updateFilteredPersonList(p -> p.isArchived());
         return new CommandResult(MESSAGE_SUCCESS);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof ListArchiveCommand;
+    }
+
+    @Override
+    public int hashCode() {
+        return COMMAND_WORD.hashCode();
     }
 }
