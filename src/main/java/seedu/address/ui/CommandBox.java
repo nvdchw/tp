@@ -114,7 +114,9 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
 
-        acceptAutocompleteSuggestion();
+        if (!acceptAutocompleteSuggestion()) {
+            return;
+        }
         commandTextField.requestFocus();
         commandTextField.positionCaret(commandTextField.getText().length());
         event.consume();
