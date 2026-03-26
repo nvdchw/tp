@@ -36,6 +36,13 @@ public class FindCommandParser implements Parser<FindCommand> {
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_TAG,
                         PREFIX_DATE, PREFIX_START_DATE, PREFIX_END_DATE);
 
+        if (!argMultimap.getPreamble().isEmpty()) {
+            throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
+        }
+
+        argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_TAG,
+                PREFIX_DATE, PREFIX_START_DATE, PREFIX_END_DATE);
+
         long searchTypeCount = Stream.of(PREFIX_NAME, PREFIX_TAG, PREFIX_DATE, PREFIX_START_DATE)
                 .filter(prefix -> argMultimap.getValue(prefix).isPresent())
                 .count();
