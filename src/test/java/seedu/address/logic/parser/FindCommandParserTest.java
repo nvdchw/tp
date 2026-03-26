@@ -32,11 +32,8 @@ public class FindCommandParserTest {
                 new FindCommand(
                         new NameContainsKeywordsPredicate(Arrays.asList("Alice", "Bob")));
 
-        // correct syntax with prefix
-        assertParseSuccess(parser, "find n/Alice Bob", expectedFindCommand);
-
-        // allow surrounding whitespace
-        assertParseSuccess(parser, "find   n/Alice Bob   ", expectedFindCommand);
+        assertParseSuccess(parser, " n/Alice Bob", expectedFindCommand);
+        assertParseSuccess(parser, "   n/Alice Bob   ", expectedFindCommand);
     }
 
     @Test
@@ -44,12 +41,12 @@ public class FindCommandParserTest {
         FindCommand expected =
                 new FindCommand(new TagContainsPredicate("friends"));
 
-        assertParseSuccess(parser, "find t/friends", expected);
+        assertParseSuccess(parser, " t/friends", expected);
     }
 
     @Test
     public void parse_missingPrefix_throwsParseException() {
-        assertParseFailure(parser, "find Alice Bob",
+        assertParseFailure(parser, " Alice Bob",
                 String.format(MESSAGE_INVALID_COMMAND_FORMAT, FindCommand.MESSAGE_USAGE));
     }
 
