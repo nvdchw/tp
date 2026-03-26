@@ -4,7 +4,6 @@ import static seedu.address.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_END_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_START_DATE;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.address.logic.parser.CommandParserTestUtil.assertParseSuccess;
 import static seedu.address.logic.parser.FindCommandParser.MESSAGE_INVALID_DATE_RANGE;
@@ -15,7 +14,6 @@ import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
 
-import seedu.address.logic.Messages;
 import seedu.address.logic.commands.FindCommand;
 import seedu.address.model.person.NameContainsKeywordsPredicate;
 import seedu.address.model.person.TagContainsPredicate;
@@ -23,7 +21,7 @@ import seedu.address.model.person.VisitContainsDatePredicate;
 
 public class FindCommandParserTest {
 
-    private FindCommandParser parser = new FindCommandParser();
+    private final FindCommandParser parser = new FindCommandParser();
 
     @Test
     public void parse_emptyArg_throwsParseException() {
