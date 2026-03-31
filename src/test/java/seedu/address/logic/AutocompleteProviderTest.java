@@ -257,14 +257,16 @@ public class AutocompleteProviderTest {
     @Test
     public void suggestCompletion_listCommand_suggestsSortPrefix() {
         // EP: list command accepts sort prefix suggestion
-        // overlap with suggestCompletion_listCommandPrefixSuggestions_work() to emphasize the "first prefix suggestion" partition
+        // overlap with suggestCompletion_listCommandPrefixSuggestions_work()
+        // to emphasize the "first prefix suggestion" partition
         assertEquals("list s/", AutocompleteProvider.suggestCompletion("list ").orElseThrow());
     }
 
     @Test
     public void suggestCompletion_listWithSortValue_noSuggestion() {
         // EP: sort value already provided
-        // overlap with suggestCompletion_listCommandPrefixSuggestions_work() to emphasize the "sort value already supplied" partition
+        // overlap with suggestCompletion_listCommandPrefixSuggestions_work()
+        // to emphasize the "sort value already supplied" partition
         assertTrue(AutocompleteProvider.suggestCompletion("list s/name ").isEmpty());
     }
 
@@ -315,42 +317,48 @@ public class AutocompleteProviderTest {
     @Test
     public void suggestCompletion_noteWithoutIndex_noSuggestion() {
         // EP: missing required index
-        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion() to emphasize the "missing index" invalid partition
+        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "missing index" invalid partition
         assertTrue(AutocompleteProvider.suggestCompletion("note ").isEmpty());
     }
 
     @Test
     public void suggestCompletion_noteWithIndexAndSpace_suggestNotePrefix() {
         // Boundary Value: minimum valid index for note
-        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion() to emphasize the "trailing space after valid index" partition
+        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "trailing space after valid index" partition
         assertEquals("note 1 nt/", AutocompleteProvider.suggestCompletion("note 1 ").orElseThrow());
     }
 
     @Test
     public void suggestCompletion_noteWithIndexPartialPrefix_suggestNotePrefix() {
         // EP: partial nt/ prefix completion
-        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion() to emphasize the "partial prefix after valid index" partition
+        // overlap with suggestCompletion_note_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "partial prefix after valid index" partition
         assertEquals("note 1 nt/", AutocompleteProvider.suggestCompletion("note 1 n").orElseThrow());
     }
 
     @Test
     public void suggestCompletion_tagWithoutIndex_noSuggestion() {
         // EP: missing required index
-        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion() to emphasize the "missing index" invalid partition
+        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "missing index" invalid partition
         assertTrue(AutocompleteProvider.suggestCompletion("tag ").isEmpty());
     }
 
     @Test
     public void suggestCompletion_tagWithIndexAndSpace_suggestAddTagPrefix() {
         // Boundary Value: minimum valid index for tag
-        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion() to emphasize the "trailing space after valid index" partition
+        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "trailing space after valid index" partition
         assertEquals("tag 1 at/", AutocompleteProvider.suggestCompletion("tag 1 ").orElseThrow());
     }
 
     @Test
     public void suggestCompletion_tagWithPartialDeletePrefix_suggestDeleteTagPrefix() {
         // EP: partial delete-tag prefix
-        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion() to emphasize the "partial prefix after valid index" partition
+        // overlap with suggestCompletion_tag_requiresIndexBeforePrefixSuggestion()
+        // to emphasize the "partial prefix after valid index" partition
         assertEquals("tag 1 dt/", AutocompleteProvider.suggestCompletion("tag 1 dt").orElseThrow());
     }
 
