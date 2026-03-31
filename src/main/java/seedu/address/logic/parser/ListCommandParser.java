@@ -39,10 +39,9 @@ public class ListCommandParser implements Parser<ListCommand> {
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         }
 
-        Optional<String> extraVals = argMultimap.getValue(new Prefix(""));
+        String preamble = argMultimap.getPreamble();
 
-        if (extraVals.isPresent() && !extraVals.get().trim().isEmpty()) {
-            // Protects from random strings between prefix or when no prefix
+        if (!preamble.trim().isEmpty()) {
             throw new ParseException(
                     String.format(MESSAGE_INVALID_COMMAND_FORMAT, ListCommand.MESSAGE_USAGE));
         }
