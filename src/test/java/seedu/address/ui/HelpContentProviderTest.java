@@ -13,9 +13,12 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.ArchiveCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.ListArchiveCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.UnarchiveCommand;
 
 /**
  * Tests for {@link HelpContentProvider}.
@@ -24,10 +27,10 @@ import seedu.address.logic.commands.ListCommand;
 public class HelpContentProviderTest {
 
     @Test
-    public void getHelpSections_returnsAllTenCommands() {
+    public void getHelpSections_returnsAllThirteenCommands() {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
-        assertEquals(10, sections.size());
+        assertEquals(13, sections.size());
     }
 
     @Test
@@ -40,6 +43,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_addCommandParsedWithDescriptionUsageExamples() {
+        // EP: command usage that has description + Parameters + Example blocks.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
         HelpContentProvider.HelpSection addSection = sections.get(0);
 
@@ -58,6 +62,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_exitCommandIsLast() {
+        // BVA: verify the last valid index in the command section list.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
         int lastIndex = sections.size() - 1;
         HelpContentProvider.HelpSection lastSection = sections.get(lastIndex);
@@ -67,11 +72,12 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_clearCommandHasSimpleUsage() {
+        // EP: compact format "command: description" should map to description + synthetic Usage line.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
-        HelpContentProvider.HelpSection clearSection = sections.get(7);
+        HelpContentProvider.HelpSection clearSection = sections.get(10);
 
         assertEquals(ClearCommand.COMMAND_WORD, clearSection.commandWord());
-        assertEquals("", clearSection.description());
+        assertEquals("Clears all entries from the address book.", clearSection.description());
         assertEquals("Usage: " + ClearCommand.COMMAND_WORD, clearSection.usage());
         assertEquals("", clearSection.examples());
     }
@@ -107,7 +113,7 @@ public class HelpContentProviderTest {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
         for (HelpContentProvider.HelpSection section : sections) {
-            assertTrue(!section.usage().isEmpty(),
+            assertFalse(section.usage().isEmpty(),
                     "Usage for " + section.commandWord() + " should not be empty");
         }
     }
@@ -117,7 +123,7 @@ public class HelpContentProviderTest {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
         for (HelpContentProvider.HelpSection section : sections) {
-            assertFalse(section.examples() == null,
+            assertNotEquals(null, section.examples(),
                     "Examples for " + section.commandWord() + " should not be null");
         }
     }
@@ -179,6 +185,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void parseHelpText_lowercaseParametersHeader_parsedCorrectly() throws Exception {
+        // EP: case-insensitive marker detection for Parameters section.
         HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
                 "Adds a person to the address book.\n"
                         + "parameters: NAME PHONE\n"
@@ -191,6 +198,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void parseHelpText_lowercaseExampleHeader_parsedCorrectly() throws Exception {
+        // EP: case-insensitive marker detection for Example section.
         HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
                 "Adds a person to the address book.\n"
                         + "Parameters: NAME PHONE\n"
@@ -232,6 +240,64 @@ public class HelpContentProviderTest {
     public void extractDescription_multipleColons_keepsTextAfterFirstColon() throws Exception {
         String result = invokeExtractDescription("add: one: two");
         assertEquals("one: two", result);
+    }
+
+    @Test
+    public void parseHelpText_compactCommandDescriptionFormat_parsedCorrectly() throws Exception {
+        // EP: compact format with no Parameters/Usage markers.
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
+                "clear: Clears all entries from the address book.");
+
+        assertEquals("Clears all entries from the address book.", parsed.description());
+        assertEquals("Usage: clear", parsed.usage());
+        assertEquals("", parsed.examples());
+    }
+
+    @Test
+    public void parseHelpText_usageHeaderAtStart_boundaryParsedAsUsageOnly() throws Exception {
+        // BVA: marker appears at index 0, so description prefix is empty.
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText("Usage: clear");
+
+        assertEquals("", parsed.description());
+        assertEquals("Usage: clear", parsed.usage());
+        assertEquals("", parsed.examples());
+    }
+
+    @Test
+    public void parseHelpText_parametersHeaderAtStart_boundaryParsedAsUsageOnly() throws Exception {
+        // BVA: Parameters marker at index 0 should not produce any description text.
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText("Parameters: INDEX");
+
+        assertEquals("", parsed.description());
+        assertEquals("Parameters: INDEX", parsed.usage());
+        assertEquals("", parsed.examples());
+    }
+
+    @Test
+    public void getHelpSections_archiveCommandInEightPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection archiveSection = sections.get(7);
+
+        assertEquals(ArchiveCommand.COMMAND_WORD, archiveSection.commandWord());
+        assertTrue(archiveSection.usage().contains("Parameters:"));
+    }
+
+    @Test
+    public void getHelpSections_unarchiveCommandInNinthPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection unarchiveSection = sections.get(8);
+
+        assertEquals(UnarchiveCommand.COMMAND_WORD, unarchiveSection.commandWord());
+        assertTrue(unarchiveSection.usage().contains("Parameters:"));
+    }
+
+    @Test
+    public void getHelpSections_listArchiveCommandInTenthPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection listArchiveSection = sections.get(9);
+
+        assertEquals(ListArchiveCommand.COMMAND_WORD, listArchiveSection.commandWord());
+        assertEquals("Usage: " + ListArchiveCommand.COMMAND_WORD, listArchiveSection.usage());
     }
 
     @Test
