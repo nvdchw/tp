@@ -2,6 +2,7 @@ package seedu.address.logic.parser;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.Messages.MESSAGE_INDEX_TOO_LARGE;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_INDEX;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -24,8 +25,6 @@ import seedu.address.model.tag.Tag;
  */
 public class ParserUtil {
 
-    public static final String MESSAGE_INVALID_INDEX = "Index is not a non-zero unsigned integer.";
-
     /**
      * Parses {@code oneBasedIndex} into an {@code Index} and returns it. Leading and trailing whitespaces will be
      * trimmed.
@@ -37,6 +36,8 @@ public class ParserUtil {
         String trimmedIndex = oneBasedIndex.trim();
 
         // First check format (digits only)
+        // Allow "-?\\d+" so negative numbers reach parseIndex().
+        // This lets us return a specific "invalid index" error instead of a generic format error.
         if (!trimmedIndex.matches("\\d+")) {
             throw new ParseException(MESSAGE_INVALID_INDEX);
         }
@@ -88,19 +89,7 @@ public class ParserUtil {
             throw new ParseException(usageMessage);
         }
 
-        try {
-            return parseIndex(token);
-        } catch (ParseException pe) {
-            String msg = pe.getMessage();
-
-            // Preserve index specific errors
-            if (msg.equals(MESSAGE_INVALID_INDEX)
-                    || msg.equals(seedu.address.logic.Messages.MESSAGE_INDEX_TOO_LARGE)) {
-                throw pe;
-            }
-
-            throw new ParseException(usageMessage, pe);
-        }
+        return parseIndex(token);
     }
 
     /**
