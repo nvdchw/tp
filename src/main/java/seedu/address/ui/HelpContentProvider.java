@@ -33,7 +33,6 @@ final class HelpContentProvider {
     private static final String NEWLINE_REGEX = "\\R";
     private static final int NOT_FOUND = -1;
     private static final int ZERO_POSITION = 0;
-    
     private static final Set<String> COMMANDS_WITH_HIDDEN_USAGE = Set.of(
             ListArchiveCommand.COMMAND_WORD,
             ClearCommand.COMMAND_WORD,
@@ -69,7 +68,8 @@ final class HelpContentProvider {
 
     private static HelpSection toHelpSection(HelpCommandSpec commandSpec) {
         ParsedHelpText parsed = parseHelpText(commandSpec.usageAndExamples());
-        String usageText = COMMANDS_WITH_HIDDEN_USAGE.contains(commandSpec.commandWord()) ? EMPTY_STRING : parsed.usage();
+        String usageText = COMMANDS_WITH_HIDDEN_USAGE.contains(commandSpec.commandWord())
+                ? EMPTY_STRING : parsed.usage();
         return new HelpSection(commandSpec.commandWord(), parsed.description(), usageText, parsed.examples());
     }
 
