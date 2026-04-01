@@ -98,6 +98,11 @@ public interface Model {
     void updateFilteredPersonList(Predicate<Person> predicate);
 
     /**
+     * Returns current {@code predicate} back for current state refresh.
+     */
+    Predicate<Person> getCurrentPredicate();
+
+    /**
      * Sorts the filtered person list by the specified {@code field}.
      * The ordering of the current filtered view will be updated accordingly.
      */
