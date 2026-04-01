@@ -8,6 +8,8 @@ import java.util.List;
  */
 public class CommandHistory {
 
+    private static final String EMPTY_STRING = "";
+
     private final List<String> history = new ArrayList<>();
     private int pointer = 0;
 
@@ -31,6 +33,7 @@ public class CommandHistory {
 
         history.add(command);
         resetPointerToEnd();
+        assert pointer == history.size() : "Pointer should be past-the-end after reset";
     }
 
     /**
@@ -38,25 +41,25 @@ public class CommandHistory {
      * at that position. If the pointer is already at the oldest command it
      * stays there and that command is returned.
      *
-     * @return the older command at the new pointer position, or {@code ""} if
+     * @return the older command at the new pointer position, or {@code EMPTY_STRING} if
      *         history is empty.
      */
     public String navigateUp() {
         if (history.isEmpty()) {
-            return "";
+            return EMPTY_STRING;
         }
         pointer = Math.max(0, pointer - 1);
-        assert pointer < history.size() : "Pointer must point to valid entry in history";
+        assert 0 <= pointer && pointer < history.size() : "Pointer must be within valid history bounds";
         return history.get(pointer);
     }
 
     /**
      * Moves the pointer one step toward newer commands and returns the command
      * at that position. If the pointer moves past the newest entry (i.e.
-     * reaches {@code history.size()}), {@code ""} is returned so the caller can
+     * reaches {@code history.size()}), {@code EMPTY_STRING} is returned so the caller can
      * clear the text field.
      *
-     * @return the newer command at the new pointer position, or {@code ""} when
+     * @return the newer command at the new pointer position, or {@code EMPTY_STRING} when
      *         past the newest entry.
      */
     public String navigateDown() {
@@ -64,9 +67,9 @@ public class CommandHistory {
             pointer++;
         }
         if (pointer >= history.size()) {
-            return "";
+            return EMPTY_STRING;
         }
-        assert 0 <= pointer && pointer < history.size() : "Pointer must be in valid range";
+        assert 0 <= pointer && pointer < history.size() : "Pointer must be valid before access";
         return history.get(pointer);
     }
 
@@ -94,7 +97,7 @@ public class CommandHistory {
         if (history.isEmpty()) {
             return null;
         }
-        assert !history.isEmpty() : "getLastCommand assumes non-empty history";
+
         return history.get(history.size() - 1);
     }
 
