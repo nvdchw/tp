@@ -93,9 +93,30 @@ Examples:
 
 ### Listing all persons : `list`
 
-Shows a list of all persons in the address book.
+Shows a list of all persons in the address book.  
+Optionally, the list can be **sorted by a specified field**.
 
-Format: `list`
+Format: `list [s/FIELD]`
+
+* If no sorting field is provided, all persons are listed in their default order (i.e. the original stored order of contacts).
+* If a sorting field is provided, the list will be sorted accordingly.
+* Sorting is persistent, once a sort is applied, it will be sorted by that specified **field** until `list` is used without any field.
+
+
+* Valid fields:
+* `name` — sorts persons alphabetically by name
+* `visit` — sorts persons by visit date/time
+
+Notes:
+* Fields is case-insensitive.  (e.g. `Name`, `Visit` are also allowed)
+* When sorting by `visit`:
+    * Persons **with visit date/time** are shown first (sorted chronologically).
+    * Persons **without visit date/time** will appear **after**, sorted by name.
+
+Examples:
+* `list`
+* `list s/name`
+* `list s/visit`
 
 ### Editing a person : `edit`
 
@@ -137,19 +158,42 @@ Examples:
 * `find t/friends` returns ALL contacts with `friends` tag (case-insensitive)
   ![result for 'find t/friends'](images/findFriendsTagResult.png)
 
-### Deleting a person : `delete`
+### Deleting person(s) : `delete`
 
-Deletes the specified person from the address book.
+Deletes one or more persons from the address book.
 
-Format: `delete INDEX`
+Format: `delete INDEX [MORE INDEXES or RANGES]`
 
-* Deletes the person at the specified `INDEX`.
+Notes:
+* Deletes the person(s) at the specified index(es).
 * The index refers to the index number shown in the displayed person list.
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
 * `find Betsy` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+
+<box type="tip" seamless>
+
+**Tip:** Use multiple index and/or ranges for bulk deletion
+</box>
+
+
+Examples:
+* `delete 2` deletes the 2nd person in the address book.
+* `delete 1 3 5` deletes the 1st, 3rd, 5th person in the address book.
+* `delete 2-4` deletes the 2nd, 3rd, 4th person in the address book.
+* `delete 1 3-5 8` deletes 1st, 3rd, 4th, 5th, 8th person in the address book.
+
+**Notes:**
+* Indexes do **not need to be in ascending order** (e.g. `delete 5 2 4` is valid).
+* Duplicate indexes will be automatically ignored.
+* Extra spaces will be automatically ignored.
+* Range of indexes have to be ascending (e.g. `delete 3-1` is invalid).
+* Ranges that are too large will result in an error.
+* If any specified index does not exist, the command will fail and display the invalid index(es).
+* All indexes are validated before deletion. If any index is invalid, **no deletion will occur**.
+
 
 ### Clearing all entries : `clear`
 
@@ -218,8 +262,8 @@ Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 **Add**    | `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​` <br> e.g., `add n/James Ho p/22224444 e/jamesho@example.com a/123, Clementi Rd, 1234665 t/friend t/colleague`
 **Clear**  | `clear`
-**Delete** | `delete INDEX`<br> e.g., `delete 3`
+**Delete** | `delete INDEX [MORE INDEXES or RANGES]`<br> e.g., `delete 1 3 6-9`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_DATE_TIME] [t/TAG]…​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**List**   | `list`
+**List**   | `list [s/FIELD]`<br> e.g., `list s/name`, `list s/visit`
 **Help**   | `help`
