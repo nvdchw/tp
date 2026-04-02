@@ -33,6 +33,7 @@ public class PhoneTest {
         assertFalse(Phone.isValidPhone("phone")); // non-numeric
         assertFalse(Phone.isValidPhone("9011p041")); // alphabets within digits
         assertFalse(Phone.isValidPhone("93 121534")); // malformed local spacing
+        assertFalse(Phone.isValidPhone("93-121534")); // malformed local hyphenation
         assertFalse(Phone.isValidPhone("1800 12 3456")); // malformed toll-free group sizes
         assertFalse(Phone.isValidPhone("1800 1234567")); // malformed toll-free spacing
 
@@ -44,9 +45,12 @@ public class PhoneTest {
         assertTrue(Phone.isValidPhone("9123 4567"));
         assertTrue(Phone.isValidPhone("6123 4567"));
         assertTrue(Phone.isValidPhone("995"));
+        assertTrue(Phone.isValidPhone("9123-4567"));
         assertTrue(Phone.isValidPhone("999"));
+        assertTrue(Phone.isValidPhone("6123-4567"));
         assertTrue(Phone.isValidPhone("1700"));
         assertTrue(Phone.isValidPhone("1800 123 4567"));
+        assertTrue(Phone.isValidPhone("1800-123-4567"));
         assertTrue(Phone.isValidPhone("18001234567"));
     }
 

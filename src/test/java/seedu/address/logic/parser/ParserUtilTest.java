@@ -39,9 +39,11 @@ public class ParserUtilTest {
     private static final String VALID_NAME = "Rachel Walker";
     private static final String VALID_PHONE = "91234567";
     private static final String VALID_SPACED_PHONE = "9123 4567";
+    private static final String VALID_HYPHENATED_PHONE = "9123-4567";
     private static final String VALID_LANDLINE_PHONE = "61234567";
     private static final String VALID_EMERGENCY_PHONE = "995";
     private static final String VALID_TOLL_FREE_PHONE = "1800 123 4567";
+    private static final String VALID_TOLL_FREE_HYPHENATED_PHONE = "1800-123-4567";
     private static final String VALID_TOLL_FREE_PHONE_NO_SPACE = "18001234567";
     private static final String VALID_ADDRESS = "123 Main Street #0505";
     private static final String VALID_EMAIL = "rachel@example.com";
@@ -109,6 +111,7 @@ public class ParserUtilTest {
     @Test
     public void parsePhone_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_PHONE));
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("93-121534"));
     }
 
     @Test
@@ -119,6 +122,9 @@ public class ParserUtilTest {
         Phone expectedSpacedPhone = new Phone(VALID_SPACED_PHONE);
         assertEquals(expectedSpacedPhone, ParserUtil.parsePhone(VALID_SPACED_PHONE));
 
+        Phone expectedHyphenatedPhone = new Phone(VALID_HYPHENATED_PHONE);
+        assertEquals(expectedHyphenatedPhone, ParserUtil.parsePhone(VALID_HYPHENATED_PHONE));
+
         Phone expectedLandlinePhone = new Phone(VALID_LANDLINE_PHONE);
         assertEquals(expectedLandlinePhone, ParserUtil.parsePhone(VALID_LANDLINE_PHONE));
 
@@ -127,6 +133,10 @@ public class ParserUtilTest {
 
         Phone expectedTollFree = new Phone(VALID_TOLL_FREE_PHONE);
         assertEquals(expectedTollFree, ParserUtil.parsePhone(VALID_TOLL_FREE_PHONE));
+
+        Phone expectedTollFreeHyphenatedPhone = new Phone(VALID_TOLL_FREE_HYPHENATED_PHONE);
+        assertEquals(expectedTollFreeHyphenatedPhone,
+                ParserUtil.parsePhone(VALID_TOLL_FREE_HYPHENATED_PHONE));
 
         Phone expectedTollFreeNoSpace = new Phone(VALID_TOLL_FREE_PHONE_NO_SPACE);
         assertEquals(expectedTollFreeNoSpace, ParserUtil.parsePhone(VALID_TOLL_FREE_PHONE_NO_SPACE));
