@@ -9,6 +9,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.parser.exceptions.ParseException;
@@ -94,93 +96,58 @@ public class ParserUtil {
     }
 
     /**
+     * Generic helper to reduce duplication for simple parsing logic.
+     */
+    private static <T> T parseField(String input, Predicate<String> validator,
+                                    String errorMsg, Function<String, T> constructor) throws ParseException {
+        requireNonNull(input);
+        String trimmed = input.trim();
+        if (!validator.test(trimmed)) {
+            throw new ParseException(errorMsg);
+        }
+        return constructor.apply(trimmed);
+    }
+
+    /**
      * Parses a {@code String name} into a {@code Name}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code name} is invalid.
      */
     public static Name parseName(String name) throws ParseException {
-        requireNonNull(name);
-        String trimmedName = name.trim();
-        if (!Name.isValidName(trimmedName)) {
-            throw new ParseException(Name.MESSAGE_CONSTRAINTS);
-        }
-        return new Name(trimmedName);
+        return parseField(name, Name::isValidName, Name.MESSAGE_CONSTRAINTS, Name::new);
     }
 
     /**
      * Parses a {@code String phone} into a {@code Phone}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code phone} is invalid.
      */
     public static Phone parsePhone(String phone) throws ParseException {
-        requireNonNull(phone);
-        String trimmedPhone = phone.trim();
-        if (!Phone.isValidPhone(trimmedPhone)) {
-            throw new ParseException(Phone.MESSAGE_CONSTRAINTS);
-        }
-        return new Phone(trimmedPhone);
+        return parseField(phone, Phone::isValidPhone, Phone.MESSAGE_CONSTRAINTS, Phone::new);
     }
 
     /**
      * Parses a {@code String address} into an {@code Address}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code address} is invalid.
      */
     public static Address parseAddress(String address) throws ParseException {
-        requireNonNull(address);
-        String trimmedAddress = address.trim();
-        if (!Address.isValidAddress(trimmedAddress)) {
-            throw new ParseException(Address.MESSAGE_CONSTRAINTS);
-        }
-        return new Address(trimmedAddress);
+        return parseField(address, Address::isValidAddress, Address.MESSAGE_CONSTRAINTS, Address::new);
     }
 
     /**
      * Parses a {@code String email} into an {@code Email}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code email} is invalid.
      */
     public static Email parseEmail(String email) throws ParseException {
-        requireNonNull(email);
-        String trimmedEmail = email.trim();
-        if (!Email.isValidEmail(trimmedEmail)) {
-            throw new ParseException(Email.MESSAGE_CONSTRAINTS);
-        }
-        return new Email(trimmedEmail);
+        return parseField(email, Email::isValidEmail, Email.MESSAGE_CONSTRAINTS, Email::new);
     }
 
     /**
      * Parses a {@code String tag} into a {@code Tag}.
-     * Leading and trailing whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code tag} is invalid.
      */
     public static Tag parseTag(String tag) throws ParseException {
-        requireNonNull(tag);
-        String trimmedTag = tag.trim();
-        if (!Tag.isValidTagName(trimmedTag)) {
-            throw new ParseException(Tag.MESSAGE_CONSTRAINTS);
-        }
-        return new Tag(trimmedTag);
+        return parseField(tag, Tag::isValidTagName, Tag.MESSAGE_CONSTRAINTS, Tag::new);
     }
 
     /**
      * Parses a {@code String note} into a {@code Note}.
-     * Lead and trail whitespaces will be trimmed.
-     *
-     * @throws ParseException if the given {@code note} is invalid.
      */
     public static Note parseNote(String note) throws ParseException {
-        requireNonNull(note);
-        String trimmedNote = note.trim();
-        if (!Note.isValidNote(trimmedNote)) {
-            throw new ParseException(Note.MESSAGE_CONSTRAINTS);
-        }
-        return new Note(trimmedNote);
+        return parseField(note, Note::isValidNote, Note.MESSAGE_CONSTRAINTS, Note::new);
     }
 
     /**
