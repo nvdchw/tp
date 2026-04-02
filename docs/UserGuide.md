@@ -188,6 +188,9 @@ Examples:
 * Indexes do **not need to be in ascending order** (e.g. `delete 5 2 4` is valid).
 * Duplicate indexes will be automatically ignored.
 * Extra spaces will be automatically ignored.
+* Range of indexes have to be ascending (e.g. `delete 3-1` is invalid).
+* Ranges that are too large will result in an error.
+* If any specified index does not exist, the command will fail and display the invalid index(es).
 * All indexes are validated before deletion. If any index is invalid, **no deletion will occur**.
 
 
