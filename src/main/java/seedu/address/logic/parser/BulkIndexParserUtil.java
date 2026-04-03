@@ -151,7 +151,7 @@ public final class BulkIndexParserUtil {
             throw new ParseException(MESSAGE_INVALID_RANGE);
         }
 
-        if ((long) end - (long) start + 1 > MAX_RANGE_SIZE) {
+        if (end - start + 1 > MAX_RANGE_SIZE) {
             throw new ParseException(MESSAGE_RANGE_TOO_LARGE);
         }
 
