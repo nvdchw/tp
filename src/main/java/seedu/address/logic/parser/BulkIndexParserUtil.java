@@ -155,8 +155,8 @@ public final class BulkIndexParserUtil {
             throw new ParseException(MESSAGE_RANGE_TOO_LARGE);
         }
 
-        for (int i = start; i <= end; i++) {
-            indexSet.add(i);
+        for (long i = start; i <= end; i++) {
+            indexSet.add((int) i);
         }
     }
 
@@ -170,7 +170,7 @@ public final class BulkIndexParserUtil {
     private static void parseSingleToken(String token, Set<Integer> indexSet)
             throws ParseException {
 
-        // Validate format first (digits only)
+        // Validate format first (digit only)
         if (!token.matches("\\d+")) {
             throw new ParseException(MESSAGE_INVALID_TOKEN);
         }
