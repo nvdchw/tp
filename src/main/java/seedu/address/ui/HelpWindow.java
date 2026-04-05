@@ -174,7 +174,10 @@ public class HelpWindow extends UiPart<Stage> {
     }
 
     private Label createUsageBlockLabel(String text) {
-        return createCodeBlockLabel(text, CSS_CLASS_CODE_BLOCK_USAGE);
+        String usageStyleClass = text.trim().startsWith("Usage:")
+                ? CSS_CLASS_CODE_BLOCK_EXAMPLE
+                : CSS_CLASS_CODE_BLOCK_USAGE;
+        return createCodeBlockLabel(text, usageStyleClass);
     }
 
     private Label createExampleBlockLabel(String text) {

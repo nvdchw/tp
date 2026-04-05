@@ -13,9 +13,13 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import seedu.address.logic.commands.AddCommand;
+import seedu.address.logic.commands.ArchiveCommand;
 import seedu.address.logic.commands.ClearCommand;
 import seedu.address.logic.commands.ExitCommand;
+import seedu.address.logic.commands.HelpCommand;
+import seedu.address.logic.commands.ListArchiveCommand;
 import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.UnarchiveCommand;
 
 /**
  * Tests for {@link HelpContentProvider}.
@@ -24,10 +28,10 @@ import seedu.address.logic.commands.ListCommand;
 public class HelpContentProviderTest {
 
     @Test
-    public void getHelpSections_returnsAllTenCommands() {
+    public void getHelpSections_returnsAllThirteenCommands() {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
-        assertEquals(10, sections.size());
+        assertEquals(13, sections.size());
     }
 
     @Test
@@ -40,6 +44,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_addCommandParsedWithDescriptionUsageExamples() {
+        // EP: command usage that has description + Parameters + Example blocks.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
         HelpContentProvider.HelpSection addSection = sections.get(0);
 
@@ -58,6 +63,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_exitCommandIsLast() {
+        // BVA: verify the last valid index in the command section list.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
         int lastIndex = sections.size() - 1;
         HelpContentProvider.HelpSection lastSection = sections.get(lastIndex);
@@ -67,13 +73,14 @@ public class HelpContentProviderTest {
 
     @Test
     public void getHelpSections_clearCommandHasSimpleUsage() {
+        // EP: clear command should hide usage and keep example only.
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
-        HelpContentProvider.HelpSection clearSection = sections.get(7);
+        HelpContentProvider.HelpSection clearSection = sections.get(10);
 
         assertEquals(ClearCommand.COMMAND_WORD, clearSection.commandWord());
-        assertEquals("", clearSection.description());
-        assertEquals("Usage: " + ClearCommand.COMMAND_WORD, clearSection.usage());
-        assertEquals("", clearSection.examples());
+        assertEquals("Clears all entries from the address book.", clearSection.description());
+        assertEquals("", clearSection.usage());
+        assertTrue(clearSection.examples().startsWith("Example:"));
     }
 
     @Test
@@ -103,11 +110,17 @@ public class HelpContentProviderTest {
     }
 
     @Test
-    public void getHelpSections_allSectionsHaveUsage() {
+    public void getHelpSections_allNonHiddenSectionsHaveUsage() {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
         for (HelpContentProvider.HelpSection section : sections) {
-            assertTrue(!section.usage().isEmpty(),
+            if (section.commandWord().equals(ClearCommand.COMMAND_WORD)
+                    || section.commandWord().equals(ListArchiveCommand.COMMAND_WORD)
+                    || section.commandWord().equals(HelpCommand.COMMAND_WORD)
+                    || section.commandWord().equals(ExitCommand.COMMAND_WORD)) {
+                continue;
+            }
+            assertFalse(section.usage().isEmpty(),
                     "Usage for " + section.commandWord() + " should not be empty");
         }
     }
@@ -117,7 +130,7 @@ public class HelpContentProviderTest {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
 
         for (HelpContentProvider.HelpSection section : sections) {
-            assertFalse(section.examples() == null,
+            assertNotEquals(null, section.examples(),
                     "Examples for " + section.commandWord() + " should not be null");
         }
     }
@@ -136,7 +149,7 @@ public class HelpContentProviderTest {
     public void helpSection_providesAllFourFields() {
         String command = "test";
         String description = "Test description";
-        String usage = "Usage: test";
+        String usage = "test";
         String examples = "Example: test command";
         HelpContentProvider.HelpSection section = new HelpContentProvider.HelpSection(
                 command, description, usage, examples);
@@ -179,6 +192,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void parseHelpText_lowercaseParametersHeader_parsedCorrectly() throws Exception {
+        // EP: case-insensitive marker detection for Parameters section.
         HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
                 "Adds a person to the address book.\n"
                         + "parameters: NAME PHONE\n"
@@ -191,6 +205,7 @@ public class HelpContentProviderTest {
 
     @Test
     public void parseHelpText_lowercaseExampleHeader_parsedCorrectly() throws Exception {
+        // EP: case-insensitive marker detection for Example section.
         HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
                 "Adds a person to the address book.\n"
                         + "Parameters: NAME PHONE\n"
@@ -235,6 +250,69 @@ public class HelpContentProviderTest {
     }
 
     @Test
+    public void parseHelpText_compactCommandDescriptionFormat_parsedCorrectly() throws Exception {
+        // EP: compact format "command: description".
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
+                "clear: Clears all entries from the address book.");
+
+        assertEquals("Clears all entries from the address book.", parsed.description());
+        assertEquals("clear", parsed.usage());
+        assertEquals("", parsed.examples());
+    }
+
+    @Test
+    public void parseHelpText_usageHeaderAtStart_treatedAsCompactFormat() throws Exception {
+        // BVA: compact format starting with colon-token "Usage: clear" treated as compact.
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText("Usage: clear");
+        assertEquals("clear", parsed.description());
+        assertEquals("Usage", parsed.usage());
+        assertEquals("", parsed.examples());
+    }
+
+    @Test
+    public void getHelpSections_archiveCommandInEightPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection archiveSection = sections.get(7);
+
+        assertEquals(ArchiveCommand.COMMAND_WORD, archiveSection.commandWord());
+        assertTrue(archiveSection.usage().contains("Parameters:"));
+    }
+
+    @Test
+    public void getHelpSections_unarchiveCommandInNinthPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection unarchiveSection = sections.get(8);
+
+        assertEquals(UnarchiveCommand.COMMAND_WORD, unarchiveSection.commandWord());
+        assertTrue(unarchiveSection.usage().contains("Parameters:"));
+    }
+
+    @Test
+    public void getHelpSections_listArchiveCommandInTenthPosition() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection listArchiveSection = sections.get(9);
+
+        assertEquals(ListArchiveCommand.COMMAND_WORD, listArchiveSection.commandWord());
+        assertEquals("", listArchiveSection.usage());
+        assertTrue(listArchiveSection.examples().startsWith("Example:"));
+    }
+
+    @Test
+    public void getHelpSections_helpAndExitHideUsageAndShowExamples() {
+        List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
+        HelpContentProvider.HelpSection helpSection = sections.get(11);
+        HelpContentProvider.HelpSection exitSection = sections.get(12);
+
+        assertEquals(HelpCommand.COMMAND_WORD, helpSection.commandWord());
+        assertEquals("", helpSection.usage());
+        assertTrue(helpSection.examples().startsWith("Example:"));
+
+        assertEquals(ExitCommand.COMMAND_WORD, exitSection.commandWord());
+        assertEquals("", exitSection.usage());
+        assertTrue(exitSection.examples().startsWith("Example:"));
+    }
+
+    @Test
     public void constructor_privateConstructor_throwsAssertionError() throws Exception {
         var ctor = HelpContentProvider.class.getDeclaredConstructor();
         ctor.setAccessible(true);
@@ -242,6 +320,27 @@ public class HelpContentProviderTest {
         InvocationTargetException ex =
                 assertThrows(InvocationTargetException.class, ctor::newInstance);
         assertTrue(ex.getCause() instanceof AssertionError);
+    }
+
+    @Test
+    public void parseHelpText_compactFormatWithExample_parsedCorrectly() throws Exception {
+        // EP: compact "command: description" with example - the standard MESSAGE_USAGE format.
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText(
+                "clear: Clears all entries from the address book.\n"
+                        + "Example: clear");
+
+        assertEquals("Clears all entries from the address book.", parsed.description());
+        assertEquals("clear", parsed.usage());
+        assertEquals("Example: clear", parsed.examples());
+    }
+
+    @Test
+    public void parseHelpText_noExampleAndNoDescription_usage() throws Exception {
+        // Edge case: plain command-only MESSAGE_USAGE (like old format)
+        HelpContentProvider.ParsedHelpText parsed = invokeParseHelpText("clear");
+        assertEquals("", parsed.description());
+        assertEquals("clear", parsed.usage());
+        assertEquals("", parsed.examples());
     }
 
     private static String invokeExtractDescription(String input) throws Exception {
