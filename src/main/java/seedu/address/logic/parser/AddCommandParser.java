@@ -54,7 +54,7 @@ public class AddCommandParser implements Parser<AddCommand> {
         VisitDateTime visitDateTime = argMultimap.getValue(PREFIX_VISIT).isPresent()
                 ? ParserUtil.parseVisitDateTime(argMultimap.getValue(PREFIX_VISIT).get())
                 : new VisitDateTime();
-        Person person = new Person(name, phone, email, address, note, tagList, visitDateTime);
+        Person person = new Person(name, phone, email, address, note, tagList, visitDateTime, false);
 
         return new AddCommand(person);
     }

@@ -33,6 +33,7 @@ class JsonAdaptedPerson {
     private final String note;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
     private final String visitDateTime;
+    private final boolean isArchived;
 
     /**
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
@@ -41,7 +42,8 @@ class JsonAdaptedPerson {
     public JsonAdaptedPerson(@JsonProperty("name") String name, @JsonProperty("phone") String phone,
             @JsonProperty("email") String email, @JsonProperty("address") String address,
                              @JsonProperty("note") String note, @JsonProperty("tags") List<JsonAdaptedTag> tags,
-                             @JsonProperty("visitDateTime") String visitDateTime) {
+                             @JsonProperty("visitDateTime") String visitDateTime,
+                             @JsonProperty("isArchived") Boolean isArchived) {
         this.name = name;
         this.phone = phone;
         this.email = email;
@@ -51,6 +53,9 @@ class JsonAdaptedPerson {
             this.tags.addAll(tags);
         }
         this.visitDateTime = visitDateTime;
+        this.isArchived = isArchived != null
+                ? isArchived
+                : false; // default to false if null (Backwards compatibility)
     }
 
     /**
@@ -66,6 +71,7 @@ class JsonAdaptedPerson {
                 .map(JsonAdaptedTag::new)
                 .collect(Collectors.toList()));
         visitDateTime = source.getVisitDateTime().toString();
+        isArchived = source.isArchived();
     }
 
     /**
@@ -134,7 +140,10 @@ class JsonAdaptedPerson {
         }
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
-        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelNote, modelTags, modelVisitDateTime);
+
+        Person person = new Person(modelName, modelPhone, modelEmail, modelAddress, modelNote, modelTags,
+                modelVisitDateTime, isArchived);
+        return person;
     }
 
 }

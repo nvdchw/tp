@@ -97,13 +97,19 @@ public class PersonTest {
         // different visitDateTime -> returns false
         editedAlice = new PersonBuilder(ALICE).withVisitDateTime("2026-12-01 14:00").build();
         assertFalse(ALICE.equals(editedAlice));
+
+        // different isArchived -> returns false
+        editedAlice = new PersonBuilder(ALICE).build();
+        editedAlice.setArchived(true);
+        assertFalse(ALICE.equals(editedAlice));
     }
 
     @Test
     public void toStringMethod() {
         String expected = Person.class.getCanonicalName() + "{name=" + ALICE.getName() + ", phone=" + ALICE.getPhone()
                 + ", email=" + ALICE.getEmail() + ", address=" + ALICE.getAddress()
-                + ", note=" + ALICE.getNote() + ", tags=" + ALICE.getTags() + "}";
+                + ", note=" + ALICE.getNote() + ", tags=" + ALICE.getTags()
+                + ", isArchived=" + ALICE.isArchived() + "}";
         assertEquals(expected, ALICE.toString());
     }
 
@@ -133,8 +139,81 @@ public class PersonTest {
                 + ", note=" + aliceWithVisitDateTime.getNote()
                 + ", tags=" + aliceWithVisitDateTime.getTags()
                 + ", visitDateTime=" + aliceWithVisitDateTime.getVisitDateTime()
+                + ", isArchived=" + aliceWithVisitDateTime.isArchived()
                 + "}";
 
         assertEquals(expected, aliceWithVisitDateTime.toString());
+    }
+
+    @Test
+    public void constructor_sixArg_defaultsApplied() {
+        Person person = new Person(
+                ALICE.getName(),
+                ALICE.getPhone(),
+                ALICE.getEmail(),
+                ALICE.getAddress(),
+                ALICE.getNote(),
+                ALICE.getTags());
+
+        assertFalse(person.getVisitDateTime().isPresent());
+        assertFalse(person.isArchived());
+    }
+
+    @Test
+    public void constructor_withVisitDateTimeAndArchived() {
+        Person person = new PersonBuilder(ALICE)
+                .withVisitDateTime("2026-12-01 14:00")
+                .build();
+        person.setArchived(true);
+
+        assertTrue(person.getVisitDateTime().isPresent());
+        assertTrue(person.isArchived());
+    }
+
+    @Test
+    public void setArchived() {
+        Person person = new PersonBuilder().build();
+
+        person.setArchived(true);
+        assertTrue(person.isArchived());
+
+        person.setArchived(false);
+        assertFalse(person.isArchived());
+    }
+
+    @Test
+    public void toStringMethod_withoutVisitDateTime() {
+        Person person = new PersonBuilder(ALICE).build();
+
+        String result = person.toString();
+        assertFalse(result.contains("visitDateTime="));
+    }
+
+
+    @Test
+    public void constructor_nullArguments_throwsNullPointerException() {
+        Name validName = ALICE.getName();
+        Phone validPhone = ALICE.getPhone();
+        Email validEmail = ALICE.getEmail();
+        Address validAddress = ALICE.getAddress();
+        Note validNote = ALICE.getNote();
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(null, validPhone, validEmail, validAddress, validNote, ALICE.getTags()));
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(validName, null, validEmail, validAddress, validNote, ALICE.getTags()));
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(validName, validPhone, null, validAddress, validNote, ALICE.getTags()));
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(validName, validPhone, validEmail, null, validNote, ALICE.getTags()));
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(validName, validPhone, validEmail, validAddress, null, ALICE.getTags()));
+
+        assertThrows(NullPointerException.class, () ->
+                new Person(validName, validPhone, validEmail, validAddress, validNote, null));
     }
 }

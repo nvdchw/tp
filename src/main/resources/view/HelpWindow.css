@@ -17,3 +17,75 @@
 #helpMessageContainer {
     -fx-background-color: derive(#1d1d1d, 20%);
 }
+
+/* ScrollPane styling */
+#commandScrollPane {
+    -fx-background-color: #1d1d1d;
+    -fx-padding: 0;
+}
+
+#commandScrollPane:focused {
+    -fx-background-color: #1d1d1d;
+}
+
+#commandScrollPane .viewport {
+    -fx-background-color: #1d1d1d;
+}
+
+#commandScrollPane .scroll-bar {
+    -fx-background-color: #2a2a2a;
+}
+
+#commandScrollPane .scroll-bar:vertical .thumb {
+    -fx-background-color: #4a4a4a;
+    -fx-background-radius: 5;
+}
+
+#commandScrollPane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #5a5a5a;
+}
+
+#commandScrollPane .scroll-bar:vertical .increment-button,
+#commandScrollPane .scroll-bar:vertical .decrement-button {
+    -fx-background-color: #2a2a2a;
+}
+
+/* VBox container styling */
+#commandContainer {
+    -fx-background-color: #1d1d1d;
+    -fx-padding: 15;
+    -fx-spacing: 20;
+}
+
+.help-command-box {
+    -fx-border-color: #4db8ff;
+    -fx-border-width: 0 0 0 4;
+    -fx-padding: 12;
+}
+
+.help-command-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
+    -fx-text-fill: #4db8ff;
+}
+
+.help-description {
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 15;
+}
+
+.help-code-block {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 15;
+    -fx-background-color: #2a2a2a;
+    -fx-padding: 10;
+}
+
+.help-code-block-usage {
+    -fx-text-fill: #9ad0ff;
+}
+
+.help-code-block-example {
+    -fx-text-fill: #ffd479;
+}
+

@@ -23,6 +23,7 @@ public class PersonBuilder {
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
     public static final String DEFAULT_NOTE = "";
+    public static final Boolean DEFAULT_IS_ARCHIVED = false;
 
     private Name name;
     private Phone phone;
@@ -31,6 +32,7 @@ public class PersonBuilder {
     private Note note;
     private Set<Tag> tags;
     private VisitDateTime visitDateTime;
+    private boolean isArchived;
 
     /**
      * Creates a {@code PersonBuilder} with the default details.
@@ -43,6 +45,7 @@ public class PersonBuilder {
         note = new Note(DEFAULT_NOTE);
         tags = new HashSet<>();
         visitDateTime = new VisitDateTime();
+        isArchived = DEFAULT_IS_ARCHIVED;
     }
 
     /**
@@ -56,6 +59,7 @@ public class PersonBuilder {
         note = personToCopy.getNote();
         tags = new HashSet<>(personToCopy.getTags());
         visitDateTime = personToCopy.getVisitDateTime();
+        isArchived = personToCopy.isArchived();
     }
 
     /**
@@ -115,10 +119,18 @@ public class PersonBuilder {
     }
 
     /**
+     * Sets the {@code isArchived} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withArchived(boolean archived) {
+        this.isArchived = archived;
+        return this;
+    }
+
+    /**
      * Builds and returns the {@code Person} object.
      */
     public Person build() {
-        return new Person(name, phone, email, address, note, tags, visitDateTime);
+        return new Person(name, phone, email, address, note, tags, visitDateTime, isArchived);
     }
 
 }

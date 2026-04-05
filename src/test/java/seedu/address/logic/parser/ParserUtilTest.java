@@ -3,7 +3,8 @@ package seedu.address.logic.parser;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.address.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
+import static seedu.address.logic.Messages.MESSAGE_INDEX_TOO_LARGE;
+import static seedu.address.logic.Messages.MESSAGE_INVALID_INDEX;
 import static seedu.address.testutil.Assert.assertThrows;
 import static seedu.address.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
@@ -26,14 +27,25 @@ import seedu.address.model.tag.Tag;
 
 public class ParserUtilTest {
     private static final String INVALID_NAME = "R@chel";
+    private static final String INVALID_LONG_NAME = "A".repeat(Name.MAX_LENGTH + 1);
     private static final String INVALID_PHONE = "+651234";
     private static final String INVALID_ADDRESS = " ";
+    private static final String INVALID_ADDRESS_WITH_SLASH = "12/34 Main Street";
     private static final String INVALID_EMAIL = "example.com";
+    private static final String INVALID_LONG_EMAIL = "a".repeat(Email.MAX_LENGTH - "@example.com".length() + 1)
+            + "@example.com";
     private static final String INVALID_TAG = "#friend";
     private static final String INVALID_VISIT_DATE_TIME = "2026-13-40 25:99";
 
     private static final String VALID_NAME = "Rachel Walker";
-    private static final String VALID_PHONE = "123456";
+    private static final String VALID_PHONE = "91234567";
+    private static final String VALID_SPACED_PHONE = "9123 4567";
+    private static final String VALID_HYPHENATED_PHONE = "9123-4567";
+    private static final String VALID_LANDLINE_PHONE = "61234567";
+    private static final String VALID_EMERGENCY_PHONE = "995";
+    private static final String VALID_TOLL_FREE_PHONE = "1800 123 4567";
+    private static final String VALID_TOLL_FREE_HYPHENATED_PHONE = "1800-123-4567";
+    private static final String VALID_TOLL_FREE_PHONE_NO_SPACE = "18001234567";
     private static final String VALID_ADDRESS = "123 Main Street #0505";
     private static final String VALID_EMAIL = "rachel@example.com";
     private static final String VALID_NOTE = "Meet client at lobby.";
@@ -45,11 +57,13 @@ public class ParserUtilTest {
 
     @Test
     public void parseIndex_invalidInput_throwsParseException() {
+        // Equivalent Partitioning (invalid): mixed numeric and non-numeric token
         assertThrows(ParseException.class, () -> ParserUtil.parseIndex("10 a"));
     }
 
     @Test
     public void parseIndex_outOfRangeInput_throwsParseException() {
+        // Boundary Value Analysis: Integer.MAX_VALUE + 1 is just beyond supported range
         assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, ()
             -> ParserUtil.parseIndex(Long.toString(Integer.MAX_VALUE + 1)));
     }
@@ -70,7 +84,11 @@ public class ParserUtilTest {
 
     @Test
     public void parseName_invalidValue_throwsParseException() {
+        // Equivalent Partitioning (invalid): bad character set
         assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_NAME));
+
+        // Boundary Value Analysis: exceeds max name length by 1
+        assertThrows(ParseException.class, () -> ParserUtil.parseName(INVALID_LONG_NAME));
     }
 
     @Test
@@ -94,12 +112,35 @@ public class ParserUtilTest {
     @Test
     public void parsePhone_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parsePhone(INVALID_PHONE));
+        assertThrows(ParseException.class, () -> ParserUtil.parsePhone("93-121534"));
     }
 
     @Test
     public void parsePhone_validValueWithoutWhitespace_returnsPhone() throws Exception {
         Phone expectedPhone = new Phone(VALID_PHONE);
         assertEquals(expectedPhone, ParserUtil.parsePhone(VALID_PHONE));
+
+        Phone expectedSpacedPhone = new Phone(VALID_SPACED_PHONE);
+        assertEquals(expectedSpacedPhone, ParserUtil.parsePhone(VALID_SPACED_PHONE));
+
+        Phone expectedHyphenatedPhone = new Phone(VALID_HYPHENATED_PHONE);
+        assertEquals(expectedHyphenatedPhone, ParserUtil.parsePhone(VALID_HYPHENATED_PHONE));
+
+        Phone expectedLandlinePhone = new Phone(VALID_LANDLINE_PHONE);
+        assertEquals(expectedLandlinePhone, ParserUtil.parsePhone(VALID_LANDLINE_PHONE));
+
+        Phone expectedEmergencyPhone = new Phone(VALID_EMERGENCY_PHONE);
+        assertEquals(expectedEmergencyPhone, ParserUtil.parsePhone(VALID_EMERGENCY_PHONE));
+
+        Phone expectedTollFree = new Phone(VALID_TOLL_FREE_PHONE);
+        assertEquals(expectedTollFree, ParserUtil.parsePhone(VALID_TOLL_FREE_PHONE));
+
+        Phone expectedTollFreeHyphenatedPhone = new Phone(VALID_TOLL_FREE_HYPHENATED_PHONE);
+        assertEquals(expectedTollFreeHyphenatedPhone,
+                ParserUtil.parsePhone(VALID_TOLL_FREE_HYPHENATED_PHONE));
+
+        Phone expectedTollFreeNoSpace = new Phone(VALID_TOLL_FREE_PHONE_NO_SPACE);
+        assertEquals(expectedTollFreeNoSpace, ParserUtil.parsePhone(VALID_TOLL_FREE_PHONE_NO_SPACE));
     }
 
     @Test
@@ -116,17 +157,21 @@ public class ParserUtilTest {
 
     @Test
     public void parseAddress_invalidValue_throwsParseException() {
+        // Equivalent Partitioning (invalid): blank and disallowed character set
         assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_ADDRESS));
+        assertThrows(ParseException.class, () -> ParserUtil.parseAddress(INVALID_ADDRESS_WITH_SLASH));
     }
 
     @Test
     public void parseAddress_validValueWithoutWhitespace_returnsAddress() throws Exception {
+        // Equivalent Partitioning (valid): standard address format
         Address expectedAddress = new Address(VALID_ADDRESS);
         assertEquals(expectedAddress, ParserUtil.parseAddress(VALID_ADDRESS));
     }
 
     @Test
     public void parseAddress_validValueWithWhitespace_returnsTrimmedAddress() throws Exception {
+        // Equivalent Partitioning (valid): valid address with surrounding whitespace
         String addressWithWhitespace = WHITESPACE + VALID_ADDRESS + WHITESPACE;
         Address expectedAddress = new Address(VALID_ADDRESS);
         assertEquals(expectedAddress, ParserUtil.parseAddress(addressWithWhitespace));
@@ -140,6 +185,7 @@ public class ParserUtilTest {
     @Test
     public void parseEmail_invalidValue_throwsParseException() {
         assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_EMAIL));
+        assertThrows(ParseException.class, () -> ParserUtil.parseEmail(INVALID_LONG_EMAIL));
     }
 
     @Test
@@ -292,5 +338,53 @@ public class ParserUtilTest {
 
         // Some random text
         assertThrows(ParseException.class, () -> ParserUtil.parseDateOrToday("random text"));
+    }
+
+    @Test
+    public void parseSingleIndexOrThrow_nullInput_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () ->
+                ParserUtil.parseSingleIndexOrThrow(null, "usage"));
+    }
+
+    @Test
+    public void parseSingleIndexOrThrow_emptyInput_throwsParseException() {
+        assertThrows(ParseException.class, "usage", () ->
+                ParserUtil.parseSingleIndexOrThrow("", "usage"));
+    }
+
+    @Test
+    public void parseSingleIndexOrThrow_whitespaceOnly_throwsParseException() {
+        assertThrows(ParseException.class, "usage", () ->
+                ParserUtil.parseSingleIndexOrThrow("   ", "usage"));
+    }
+
+    @Test
+    public void parseSingleIndexOrThrow_multipleTokens_throwsParseException() {
+        assertThrows(ParseException.class, "usage", () ->
+                ParserUtil.parseSingleIndexOrThrow("1 2", "usage"));
+    }
+
+    @Test
+    public void parseSingleIndexOrThrow_nonNumeric_throwsParseException() {
+        assertThrows(ParseException.class, "usage", () ->
+                ParserUtil.parseSingleIndexOrThrow("abc", "usage"));
+    }
+
+    @Test
+    public void parseIndex_zero_throwsParseException() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
+                ParserUtil.parseIndex("0"));
+    }
+
+    @Test
+    public void parseIndex_negative_throwsParseException() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
+                ParserUtil.parseIndex("-1"));
+    }
+
+    @Test
+    public void parseIndex_indexTooLarge_throwsParseException() {
+        assertThrows(ParseException.class, MESSAGE_INDEX_TOO_LARGE, () ->
+                ParserUtil.parseIndex("999999999999999999999999"));
     }
 }

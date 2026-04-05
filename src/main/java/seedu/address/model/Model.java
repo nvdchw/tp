@@ -5,6 +5,7 @@ import java.util.function.Predicate;
 
 import javafx.collections.ObservableList;
 import seedu.address.commons.core.GuiSettings;
+import seedu.address.logic.SortField;
 import seedu.address.model.person.Person;
 
 /**
@@ -12,7 +13,7 @@ import seedu.address.model.person.Person;
  */
 public interface Model {
     /** {@code Predicate} that always evaluate to true */
-    Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> true;
+    Predicate<Person> PREDICATE_SHOW_ALL_PERSONS = unused -> !unused.isArchived();
 
     /**
      * Replaces user prefs data with the data in {@code userPrefs}.
@@ -64,6 +65,18 @@ public interface Model {
     void deletePerson(Person target);
 
     /**
+     * Archives the given person.
+     * The person must exist in the address book.
+     */
+    void archivePerson(Person personToArchive);
+
+    /**
+     * Unarchives the given person.
+     * The person must exist in the address book AND must be archived.
+     */
+    void unarchivePerson(Person personToUnarchive);
+
+    /**
      * Adds the given person.
      * {@code person} must not already exist in the address book.
      */
@@ -86,10 +99,16 @@ public interface Model {
     void updateFilteredPersonList(Predicate<Person> predicate);
 
     /**
+     * Returns the predicate currently applied to the filtered person list.
+     * This can be reused to reapply the existing filter without modifying it.
+     */
+    Predicate<Person> getCurrentPredicate();
+
+    /**
      * Sorts the filtered person list by the specified {@code field}.
      * The ordering of the current filtered view will be updated accordingly.
      */
-    default void sortFilteredPersonList(String field){}
+    default void sortFilteredPersonList(SortField field){}
 
     /**
      * Resets the sorting of the filtered person list.

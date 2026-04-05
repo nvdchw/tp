@@ -13,6 +13,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
+import seedu.address.logic.SortField;
 import seedu.address.model.person.Person;
 
 /**
@@ -25,6 +26,7 @@ public class ModelManager implements Model {
     private final UserPrefs userPrefs;
     private final FilteredList<Person> filteredPersons;
     private final SortedList<Person> sortedPersons;
+    private Predicate<Person> currentPredicate;
 
     /**
      * Initializes a ModelManager with the given addressBook and userPrefs.
@@ -36,8 +38,9 @@ public class ModelManager implements Model {
 
         this.addressBook = new AddressBook(addressBook);
         this.userPrefs = new UserPrefs(userPrefs);
-        filteredPersons = new FilteredList<>(this.addressBook.getPersonList());
+        filteredPersons = new FilteredList<>(this.addressBook.getPersonList(), p -> !p.isArchived());
         sortedPersons = new SortedList<>(filteredPersons);
+        this.currentPredicate = PREDICATE_SHOW_ALL_PERSONS;
     }
 
     public ModelManager() {
@@ -103,9 +106,21 @@ public class ModelManager implements Model {
     }
 
     @Override
+    public void archivePerson(Person person) {
+        requireNonNull(person);
+        person.setArchived(true);
+    }
+
+    @Override
+    public void unarchivePerson(Person person) {
+        requireNonNull(person);
+        person.setArchived(false);
+    }
+
+    @Override
     public void addPerson(Person person) {
         addressBook.addPerson(person);
-        updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        updateFilteredPersonList(this.currentPredicate);
     }
 
     @Override
@@ -129,7 +144,9 @@ public class ModelManager implements Model {
     @Override
     public void updateFilteredPersonList(Predicate<Person> predicate) {
         requireNonNull(predicate);
-        filteredPersons.setPredicate(predicate);
+        this.currentPredicate = predicate;
+        filteredPersons.setPredicate(p -> false); // Force clear first
+        filteredPersons.setPredicate(predicate); // Then apply actual predicate
     }
 
     @Override
@@ -149,28 +166,40 @@ public class ModelManager implements Model {
     }
 
     @Override
-    public void sortFilteredPersonList(String field) {
+    public void sortFilteredPersonList(SortField field) {
+
+        // Reset to original order first
+        sortedPersons.setComparator(null);
 
         Comparator<Person> comparator;
 
         switch (field) {
-        case "name":
-            comparator = Comparator.comparing(p -> p.getName().fullName.toLowerCase());
+        case NAME:
+            comparator = getNameComparator();
             break;
 
-        case "visit":
-            comparator = Comparator.comparing(
-                    p -> p.getVisitDateTime().isPresent()
-                            ? p.getVisitDateTime().getValue()
-                            : null,
-                    Comparator.nullsLast(Comparator.naturalOrder())
-            );
+        case VISIT:
+            comparator = getVisitComparator();
             break;
 
         default:
             return;
         }
+
         sortedPersons.setComparator(comparator);
+    }
+
+    private Comparator<Person> getNameComparator() {
+        return Person::compareByName;
+    }
+
+    private Comparator<Person> getVisitComparator() {
+        return Person::compareByVisitThenName;
+    }
+
+    @Override
+    public Predicate<Person> getCurrentPredicate() {
+        return this.currentPredicate;
     }
 
     @Override
