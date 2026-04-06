@@ -48,7 +48,7 @@ public class HelpContentProviderTest {
         List<HelpContentProvider.HelpSection> sections = HelpContentProvider.getHelpSections();
         HelpContentProvider.HelpSection addSection = sections.get(0);
 
-        assertEquals("Adds a person to the address book.", addSection.description());
+        assertEquals("Adds a contact to the address book.", addSection.description());
         assertTrue(addSection.usage().startsWith("Parameters:"));
         assertTrue(addSection.examples().startsWith("Example:"));
     }
