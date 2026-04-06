@@ -1037,6 +1037,91 @@ Steps:
 Expected:
 - Command fails with non-existent-tag message.
 
+### Deleting contact(s) : `delete`
+
+*Prerequisites:*
+- At least 5 contacts exist (for bulk/range scenarios).
+
+!!**Positive Test Case 1: Delete single index**!!
+
+Steps:
+1. Run `list`.
+2. Run `delete 2`.
+
+Expected:
+- Contact at index 2 is removed.
+
+!!**Positive Test Case 2: Delete multiple indexes and range**!!
+
+Steps:
+1. Run `delete 1 3-4 6`
+
+Expected:
+- All specified contacts are deleted in one command.
+
+!!**Positive Test Case 3: Duplicate indexes are ignored**!!
+
+Steps:
+1. Run `delete 2 2 2-2`
+
+Expected:
+- Contact 2 is deleted once without errors.
+
+!!**Negative Test Case 1: Descending range**!!
+
+Steps:
+1. Run `delete 5-2`
+
+Expected:
+- Command fails with invalid range message.
+
+!!**Negative Test Case 2: Out-of-range index in bulk delete**!!
+
+Steps:
+1. Run `delete 1 999`
+
+Expected:
+- Command fails and no contacts are deleted.
+
+!!**Negative Test Case 3: Invalid token**!!
+
+Steps:
+1. Run `delete a`
+
+Expected:
+- Command fails with invalid token/format message.
+
+### Unarchiving a contact : `unarchive`
+
+*Prerequisites:*
+- At least one archived contact exists for positive flow.
+
+!!**Positive Test Case 1: Unarchive from archived list**!!
+
+Steps:
+1. Run `list-archive`.
+2. Run `unarchive 1`.
+
+Expected:
+- Command succeeds with `Unarchived: ...` message.
+
+!!**Negative Test Case 1: Invalid index format**!!
+
+Steps:
+1. Run `unarchive abc`
+
+Expected:
+- Command fails with usage/invalid index message.
+
+!!**Negative Test Case 2: Out-of-range index**!!
+
+Steps:
+1. Run `list-archive`.
+2. Run `unarchive 999`.
+
+Expected:
+- Command fails with invalid displayed index message.
+
 
 ### Saving data
 
