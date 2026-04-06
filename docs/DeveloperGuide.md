@@ -618,113 +618,107 @@ Steps:
 Expected:
 - Help window opens.
 
-### Adding a contact
+### Adding a contact: `add`
 
 *Prerequisites:*
 - CareSync is running.
-- List all contacts using the `list` command.
+- Run `list` to see the current contact list.
 
-!!**Positive Test Case 1: Adding with only compulsory fields**!!
+!!**Positive Test Case 1: Add with compulsory fields only**!!
 
 Steps:
 1. Run `add n/Hugo p/96543218 e/hugo@example.com a/Hugo street, block 123, #01-01`
 
 Expected:
-- Message: `New contact added: Hugo; Phone: ...`
-- Contact is added to the list.
-- Contact information is as specified.
-- List index increases accordingly.
+- Message: `New person added: ...`
+- Contact is added to the list with the specified values.
 
-!!**Positive Test Case 2: Adding with all fields**!!
+!!**Positive Test Case 2: Add with all fields**!!
 
 Steps:
-1. Run `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 nt/Needs financial support v/2026-12-01 14:00 t/caseid6`
+1. Run `add n/John Doe p/+65 9876-5432 e/johnd@example.com a/John street, block 123, #01-01 nt/Needs financial support v/2026-12-01 14:00 t/caseid6`
 
 Expected:
-- Message: `New contact added: John Doe; Phone: ...`
-- Contact is added to the list.
-- Contact information is as specified.
-- List index increases accordingly.
+- Message: `New person added: ...`
+- Contact is added with note, visit date/time, and tag.
 
-!!**Positive Test Case 3: Adding with duplicate fields (except name)**!!
+!!**Positive Test Case 3: Add contacts with duplicate non-name fields**!!
 
 Steps:
-1. Run `add n/Alice1 p/88883333 e/alice@example.com a/Alice street, block 123, #01-01 nt/Needs financial support v/2026-12-01 14:00 t/caseid6`
-2. Run `add n/Alice2 p/88883333 e/alice@example.com a/Alice street, block 123, #01-01 nt/Needs financial support v/2026-12-01 14:00 t/caseid6`
+1. Run `add n/Alice One p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`.
+2. Run `add n/Alice Two p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`.
 
 Expected:
-- Message: `New contact added: Alice1; Phone: ...`
-- `Alice1` is added to the list.
-- Message: `New contact added: Alice2; Phone: ...`
-- `Alice2` is added to the list.
-- Contact information are as specified.
-- List index increases accordingly.
+- Both commands succeed.
+- Both contacts are present in the list.
 
-!!**Negative Test Case 1: Adding with duplicate name**!!
+!!**Negative Test Case 1: Add duplicate person**!!
 
 Steps:
-1. Run `add n/Alicia p/80015678 e/alicia@example.com a/Alicia street, block 123, #01-01`
-1. Run the same command again.
+1. Run `add n/Alicia p/80015678 e/alicia@example.com a/Alicia street, block 123, #01-01`.
+2. Run the same command again.
 
 Expected:
-- Message: `This contact already exists in the address book`
-- No contact is added.
+- Second command fails with duplicate-person message.
+- No duplicate contact is added.
 
-!!**Negative Test Case 2: Adding with invalid name**!!
+!!**Negative Test Case 2: Invalid name**!!
 
 Steps:
 1. Run `add n/Bob- p/92225430 e/bob@example.com a/Bob street, block 123, #01-01`
 
 Expected:
-- Message: `Names should only contain alphanumeric characters ...`
-- No contact is added.
+- Command fails with name constraint message.
 
-!!**Negative Test Case 3: Adding with invalid phone**!!
+!!**Negative Test Case 3: Invalid phone**!!
 
 Steps:
-1. Run `add n/Bob p/123 e/bob@example.com a/Bob street, block 123, #01-01`
+1. Run `add n/Bob p/+-- e/bob@example.com a/Bob street, block 123, #01-01`
 
 Expected:
-- Message: `Phone numbers should be an ...`
-- No contact is added.
+- Command fails with phone constraint message.
 
-!!**Negative Test Case 4: Adding with invalid email**!!
+!!**Negative Test Case 4: Invalid email**!!
 
 Steps:
 1. Run `add n/Bob p/91234567 e/bemail a/Bob street, block 123, #01-01`
 
 Expected:
-- Message: `Emails should be of the format ...`
-- No contact is added.
+- Command fails with email constraint message.
 
-!!**Negative Test Case 5: Adding with invalid address**!!
+!!**Negative Test Case 5: Invalid address**!!
 
 Steps:
 1. Run `add n/Bob p/91234567 e/bob@example.com a/Bob street/block123`
 
 Expected:
-- Message: `Addresses should not be blank ...`
-- No contact is added.
+- Command fails with address constraint message.
 
-!!**Negative Test Case 6: Adding with invalid note**!!
+!!**Negative Test Case 6: Invalid note**!!
 
 Steps:
 1. Run `add n/Bob p/91234567 e/bob@example.com a/Bob street, block 123, #01-01 nt/notes+-`
 
 Expected:
-- Message: `Notes should be up to ...`
-- No contact is added.
+- Command fails with note constraint message.
 
-!!**Negative Test Case 7: Adding with invalid visit date and time**!!
+!!**Negative Test Case 7: Invalid visit date**!!
 
 Steps:
 1. Run `add n/Bob p/91234567 e/bob@example.com a/Bob street, block 123, #01-01 v/2026-12-32 12:00`
 
 Expected:
-- Message: `Visit date and time must be a valid ...`
-- No contact is added.
+- Command fails with visit date/time constraint message.
 
-!!**Negative Test Case 8: Adding with invalid tag**!!
+!!**Negative Test Case 8: Invalid visit time**!!
+
+Steps:
+1. Run `add n/Bob p/91234567 e/bob@example.com a/Bob street, block 123, #01-01 v/2026-12-01 24:00`
+
+Expected:
+- Command fails with visit date/time constraint message.
+
+!!**Negative Test Case 9: Invalid tag**!!
 
 Steps:
 1. Run `add n/Bob p/91234567 e/bob@example.com a/Bob street, block 123, #01-01 t/fr!end`
