@@ -156,7 +156,21 @@ The `Storage` component,
 
 ### Common classes
 
-Classes used by multiple components are in the `seedu.address.commons` package.
+The following are a non-exhaustive list of common classes that live in `seedu.address.commons` and are reused across multiple components:
+* Config — stores application configuration such as logging level and file paths.
+* GuiSettings — stores UI-related preferences such as window size and position.
+* LogsCenter — configures and manages application-wide logging, providing logger instances used across the system.
+* JsonUtil and FileUtil — handle data persistence by providing utilities for reading, writing, and serializing data to and from JSON files.
+* DataLoadingException and IllegalValueException — represent exceptions related to data loading and validation errors.
+* Utility classes such as `AppUtil`, `CollectionUtil`, and `StringUtil` provide helper methods for common operations like argument validation, collection handling, and string processing.
+
+<box type="info" seamless>
+
+**Guideline:** Components should interact with these classes through their public APIs (interfaces or utility methods) rather than their internal implementation details to maintain loose coupling and improve testability.
+
+**Disclaimer:** This is a non-exhaustive list of common classes intended to give developers an overview of shared utilities in the application. Refer to the `commons` package for the complete list of classes.
+
+</box>
 
 --------------------------------------------------------------------------------------------------------------------
 
