@@ -839,7 +839,7 @@ Expected:
 !!**Positive Test Case 1: Edit one field**!!
 
 Steps:
-1. Run `edit 1 p/+65 9000-1234`
+1. Run `edit 1 p/91234567`
 
 Expected:
 - Command succeeds and phone for contact 1 is updated.
@@ -847,7 +847,7 @@ Expected:
 !!**Positive Test Case 2: Edit multiple fields**!!
 
 Steps:
-1. Run `edit 1 e/newmail@example.com a/#12-34, Sample Road`
+1. Run `edit 1 e/newmail@example.com a/12-34, Sample Road #01-01`
 
 Expected:
 - Command succeeds and both fields are updated.
@@ -876,7 +876,23 @@ Steps:
 Expected:
 - Command fails with message: `The contact index provided is invalid.`
 
-!!**Negative Test Case 3: Duplicate tag values**!!
+!!**Negative Test Case 3: Invalid phone**!!
+
+Steps:
+1. Run `edit 1 p/911a`
+
+Expected:
+- Command fails with message: `Phone numbers should be an 8-digit local number starting with 6, 8, or 9 (spaces or hyphens allowed as XXXX XXXX or XXXX-XXXX), a toll-free number in the format 1800 XXX XXXX, 1800-XXX-XXXX, or 1800XXXXXXX, or a valid emergency number (995, 999, 1700).`
+
+!!**Negative Test Case 4: Invalid address**!!
+
+Steps:
+1. Run `edit 1 a/Bob street/block123`
+
+Expected:
+- Command fails with message: `Addresses should not be blank, must be at most 120 characters, and may only contain alphanumeric characters, spaces, commas, periods, apostrophes, parentheses, hyphens, and hashtags`
+
+!!**Negative Test Case 5: Duplicate tag values**!!
 
 Steps:
 1. Run `edit 1 t/friend t/Friend`
