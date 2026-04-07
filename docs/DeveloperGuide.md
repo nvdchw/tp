@@ -1241,8 +1241,8 @@ Expected:
 !!**Positive Test Case 4: Autocomplete stops when command becomes invalid**!!
 
 Steps:
-1. Type `find n/Alex` and press `TAB`.
-2. Type `edit 1 n/Joe x/a` and press `TAB`.
+1. Type `find n/Alex ` and press `TAB`.
+2. Type `edit 1 n/Joe x/a ` and press `TAB`.
 
 Expected:
 - Step 1: no additional prefix suggestion is accepted for `find`.
