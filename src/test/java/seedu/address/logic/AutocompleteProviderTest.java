@@ -149,6 +149,8 @@ public class AutocompleteProviderTest {
         // EP: Standalone invalid prefix-like tokens prevent autocomplete progression
         assertTrue(AutocompleteProvider.suggestCompletion("add n/ x/ ").isEmpty());
         assertTrue(AutocompleteProvider.suggestCompletion("add n/ x/a ").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("add x n").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("add x n p").isEmpty());
     }
 
     @Test
@@ -252,6 +254,7 @@ public class AutocompleteProviderTest {
         assertTrue(AutocompleteProvider.suggestCompletion("find xyz t/client ").isEmpty());
         assertTrue(AutocompleteProvider.suggestCompletion("find x y z n/").isEmpty());
         assertTrue(AutocompleteProvider.suggestCompletion("find invalid more stuff t/client ").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("find x n").isEmpty());
     }
 
     @Test

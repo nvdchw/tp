@@ -120,6 +120,10 @@ public final class AutocompleteProvider {
             return suggestFindPrefixCompletion(input, targetArgs, lastToken, config.prefixes());
         }
 
+        if (!lastToken.isEmpty() && hasInvalidArgsBeforeCurrentToken(targetArgs, lastToken, config.prefixes())) {
+            return Optional.empty();
+        }
+
         if (lastToken.isEmpty()) {
             if (hasInvalidFreeTextArgs(targetArgs, config.prefixes())) {
                 return Optional.empty();
@@ -157,6 +161,10 @@ public final class AutocompleteProvider {
         }
 
         if (findState.hasCompletedMode()) {
+            return Optional.empty();
+        }
+
+        if (!lastToken.isEmpty() && hasInvalidArgsBeforeCurrentToken(args, lastToken, prefixes)) {
             return Optional.empty();
         }
 
@@ -284,6 +292,19 @@ public final class AutocompleteProvider {
         }
 
         return false;
+    }
+
+    private static boolean hasInvalidArgsBeforeCurrentToken(String args, String currentToken, List<String> prefixes) {
+        assert args != null : "hasInvalidArgsBeforeCurrentToken args must not be null";
+        assert currentToken != null : "hasInvalidArgsBeforeCurrentToken currentToken must not be null";
+        assert prefixes != null : "hasInvalidArgsBeforeCurrentToken prefixes must not be null";
+
+        int currentTokenStartIndex = args.length() - currentToken.length();
+        if (currentTokenStartIndex <= 0) {
+            return false;
+        }
+
+        return hasInvalidFreeTextArgs(args.substring(0, currentTokenStartIndex), prefixes);
     }
 
     private static int firstPrefixTokenStartIndex(String args, List<String> prefixes) {
