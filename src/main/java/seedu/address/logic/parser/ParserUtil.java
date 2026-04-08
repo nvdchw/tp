@@ -175,10 +175,11 @@ public class ParserUtil {
         if (trimmedVisitDateTime.isEmpty()) {
             return new VisitDateTime(); // Return empty if not provided
         }
-        if (!VisitDateTime.isValidVisitDateTime(trimmedVisitDateTime)) {
+        try {
+            return new VisitDateTime(trimmedVisitDateTime);
+        } catch (IllegalArgumentException e) {
             throw new ParseException(VisitDateTime.MESSAGE_CONSTRAINTS);
         }
-        return new VisitDateTime(trimmedVisitDateTime);
     }
 
     /**
@@ -198,9 +199,9 @@ public class ParserUtil {
         }
 
         try {
-            return LocalDate.parse(trimmedDate);
+            return VisitDateTime.parseDate(trimmedDate);
         } catch (DateTimeParseException e) {
-            // catch the format errors and invalid dates (e.g., April 31)
+            // catch unsupported formats and out-of-range values (e.g., month 13)
             throw new ParseException(VisitDateTime.MESSAGE_DATE_CONSTRAINTS);
         }
     }

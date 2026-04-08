@@ -65,6 +65,7 @@ public class EditCommandParser implements Parser<EditCommand> {
             editPersonDescriptor.setNote(ParserUtil.parseNote(argMultimap.getValue(PREFIX_NOTE).get()));
         }
         if (argMultimap.getValue(PREFIX_VISIT).isPresent()) {
+            // A blank v/ explicitly clears the existing visit date-time.
             editPersonDescriptor.setVisitDateTime(
                     ParserUtil.parseVisitDateTime(argMultimap.getValue(PREFIX_VISIT).get()));
         }

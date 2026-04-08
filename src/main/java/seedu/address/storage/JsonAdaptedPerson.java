@@ -130,20 +130,20 @@ class JsonAdaptedPerson {
 
         // Handle optional visitDateTime field
         final VisitDateTime modelVisitDateTime;
-        if (visitDateTime == null || visitDateTime.isEmpty()) {
+        if (visitDateTime == null || visitDateTime.trim().isEmpty()) {
             modelVisitDateTime = new VisitDateTime();
         } else {
-            if (!VisitDateTime.isValidVisitDateTime(visitDateTime)) {
+            try {
+                modelVisitDateTime = new VisitDateTime(visitDateTime.trim());
+            } catch (IllegalArgumentException e) {
                 throw new IllegalValueException(VisitDateTime.MESSAGE_CONSTRAINTS);
             }
-            modelVisitDateTime = new VisitDateTime(visitDateTime);
         }
 
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
-        Person person = new Person(modelName, modelPhone, modelEmail, modelAddress, modelNote, modelTags,
+        return new Person(modelName, modelPhone, modelEmail, modelAddress, modelNote, modelTags,
                 modelVisitDateTime, isArchived);
-        return person;
     }
 
 }
