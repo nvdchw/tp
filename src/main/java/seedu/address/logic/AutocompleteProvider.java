@@ -18,6 +18,8 @@ public final class AutocompleteProvider {
     private static final Logger logger = LogsCenter.getLogger(AutocompleteProvider.class);
     private static final String EMPTY_STRING = "";
     private static final String SINGLE_SPACE = " ";
+    private static final String PREFIX_TOKEN = "/";
+    private static final String WHITESPACE_REGEX = "\\s+";
 
     private static final Set<String> NO_REPEATABLE_PREFIXES = Set.of();
 
@@ -46,6 +48,8 @@ public final class AutocompleteProvider {
      *     Enforces index requirement for commands like edit, note, and tag
      *     Progressively suggests prefixes in order after previous prefixes are entered
      *     For repeatable prefixes (e.g., "t/"), continues suggesting after all other prefixes are complete
+     *     Stops suggesting whencommand becomes complete (e.g., "find n/Alice)
+     *         or when invalid input is detected (e.g., "add x/")
      *
      * @param userInput the user's current input string
      * @return an {@code Optional} containing the full completed suggestion if one exists,
@@ -120,6 +124,20 @@ public final class AutocompleteProvider {
             return suggestFindPrefixCompletion(input, targetArgs, lastToken, config.prefixes());
         }
 
+        return suggestStandardPrefixCompletion(input, targetArgs, lastToken, config);
+    }
+
+    private static Optional<String> suggestStandardPrefixCompletion(
+            String input, String targetArgs, String lastToken, AutocompleteCommandMetadata config) {
+        assert input != null : "suggestStandardPrefixCompletion input must not be null";
+        assert targetArgs != null : "suggestStandardPrefixCompletion targetArgs must not be null";
+        assert lastToken != null : "suggestStandardPrefixCompletion lastToken must not be null";
+        assert config != null : "suggestStandardPrefixCompletion config must not be null";
+
+        if (!lastToken.isEmpty() && hasInvalidArgsBeforeCurrentToken(targetArgs, lastToken, config.prefixes())) {
+            return Optional.empty();
+        }
+
         if (lastToken.isEmpty()) {
             if (hasInvalidFreeTextArgs(targetArgs, config.prefixes())) {
                 return Optional.empty();
@@ -157,6 +175,10 @@ public final class AutocompleteProvider {
         }
 
         if (findState.hasCompletedMode()) {
+            return Optional.empty();
+        }
+
+        if (!lastToken.isEmpty() && hasInvalidArgsBeforeCurrentToken(args, lastToken, prefixes)) {
             return Optional.empty();
         }
 
@@ -253,6 +275,10 @@ public final class AutocompleteProvider {
             return false;
         }
 
+        if (containsInvalidPrefixToken(args, prefixes)) {
+            return true;
+        }
+
         if (!containsAnyPrefixToken(args, prefixes)) {
             return true;
         }
@@ -263,6 +289,36 @@ public final class AutocompleteProvider {
         }
 
         return !args.substring(0, firstPrefixIndex).isBlank();
+    }
+
+    private static boolean containsInvalidPrefixToken(String args, List<String> prefixes) {
+        assert args != null : "containsInvalidPrefixToken args must not be null";
+        assert prefixes != null : "containsInvalidPrefixToken prefixes must not be null";
+
+        for (String token : args.split(WHITESPACE_REGEX)) {
+            if (token.isBlank()) {
+                continue;
+            }
+
+            if (token.contains(PREFIX_TOKEN) && prefixes.stream().noneMatch(prefix -> token.startsWith(prefix))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean hasInvalidArgsBeforeCurrentToken(String args, String currentToken, List<String> prefixes) {
+        assert args != null : "hasInvalidArgsBeforeCurrentToken args must not be null";
+        assert currentToken != null : "hasInvalidArgsBeforeCurrentToken currentToken must not be null";
+        assert prefixes != null : "hasInvalidArgsBeforeCurrentToken prefixes must not be null";
+
+        int currentTokenStartIndex = args.length() - currentToken.length();
+        if (currentTokenStartIndex <= 0) {
+            return false;
+        }
+
+        return hasInvalidFreeTextArgs(args.substring(0, currentTokenStartIndex), prefixes);
     }
 
     private static int firstPrefixTokenStartIndex(String args, List<String> prefixes) {

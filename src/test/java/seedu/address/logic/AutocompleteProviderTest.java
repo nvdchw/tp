@@ -145,6 +145,15 @@ public class AutocompleteProviderTest {
     }
 
     @Test
+    public void suggestCompletion_invalidPrefixToken_preventsSuggestion() {
+        // EP: Standalone invalid prefix-like tokens prevent autocomplete progression
+        assertTrue(AutocompleteProvider.suggestCompletion("add n/ x/ ").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("add n/ x/a ").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("add x n").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("add x n p").isEmpty());
+    }
+
+    @Test
     public void suggestCompletion_onlyWhitespaceAllowsSuggestion() {
         // EP: Only whitespace (no invalid tokens) allows prefix suggestions
         assertEquals("add  p/", AutocompleteProvider.suggestCompletion("add  p").orElseThrow());
@@ -245,6 +254,7 @@ public class AutocompleteProviderTest {
         assertTrue(AutocompleteProvider.suggestCompletion("find xyz t/client ").isEmpty());
         assertTrue(AutocompleteProvider.suggestCompletion("find x y z n/").isEmpty());
         assertTrue(AutocompleteProvider.suggestCompletion("find invalid more stuff t/client ").isEmpty());
+        assertTrue(AutocompleteProvider.suggestCompletion("find x n").isEmpty());
     }
 
     @Test
