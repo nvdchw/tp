@@ -61,6 +61,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsPresent_success() {
+        // EP (valid): all compulsory fields are present with valid optional tag/note combinations.
         Person expectedPerson = new PersonBuilder(BOB).withNote("").withTags(VALID_TAG_FRIEND).build();
 
         // whitespace only preamble
@@ -86,6 +87,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_allFieldsIncludingVisitDateTime_success() {
+        // EP (valid): optional visit date/time is provided with otherwise valid input.
         Person expectedPerson = new PersonBuilder(BOB).withTags(VALID_TAG_FRIEND).withNote(VALID_NOTE_BOB)
                 .withVisitDateTime(VALID_VISIT_BOB).build();
 
@@ -97,6 +99,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_repeatedNonTagValue_failure() {
+        // BVA: single-valued prefixes exceed cardinality bound when repeated.
         String validExpectedPersonString = NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND;
 
@@ -165,6 +168,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_optionalFieldsMissing_success() {
+        // BVA: lower bound where optional fields are omitted (0 tags, no visit date/time).
         // zero tags
         Person expectedPerson = new PersonBuilder(AMY).withNote("").withTags().build();
         assertParseSuccess(parser, NAME_DESC_AMY + PHONE_DESC_AMY + EMAIL_DESC_AMY + ADDRESS_DESC_AMY,
@@ -177,6 +181,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_compulsoryFieldMissing_failure() {
+        // EP (invalid): each missing compulsory prefix belongs to an invalid format partition.
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, AddCommand.MESSAGE_USAGE);
 
         // missing name prefix
@@ -202,6 +207,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_invalidValue_failure() {
+        // EP (invalid): malformed field values should fail at the first invalid value detected.
         // invalid name
         assertParseFailure(parser, INVALID_NAME_DESC + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
                 + TAG_DESC_HUSBAND + TAG_DESC_FRIEND, Name.MESSAGE_CONSTRAINTS);
@@ -241,6 +247,7 @@ public class AddCommandParserTest {
     }
     @Test
     public void parse_repeatedVisitDateTime_failure() {
+        // BVA: optional visit date/time is single-valued; repeating it crosses the cardinality bound.
         String validExpectedPersonString = NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + VISIT_DESC_BOB;
 
@@ -251,6 +258,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_invalidThenValidVisitDateTime_failure() {
+        // EP (invalid): duplicate prefix error still applies even if one occurrence is invalid.
         String validExpectedPersonString = NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND + VISIT_DESC_BOB;
 
@@ -261,6 +269,7 @@ public class AddCommandParserTest {
 
     @Test
     public void parse_visitDateTimeWithMultipleTags_success() {
+        // EP (valid): valid combination of optional single visit date/time and multiple tags.
         Person expectedPerson = new PersonBuilder(BOB)
                 .withNote("")
                 .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND)
