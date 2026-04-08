@@ -227,6 +227,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_
 * Edits the contact at the specified `INDEX`.
 * **At least one of the optional fields** must be provided.
 * Existing values will be updated to the input values.
+* Use `v/` with no value to clear the contact's visit date and time.
 * When editing tags, the **existing tags of the contact will be removed** i.e adding of tags is not cumulative.
 * You can remove all the contact's tags by typing `t/` without
     specifying any tags after it.
@@ -234,6 +235,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_
 Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st contact to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd contact to be `Betsy Crower` and clears all existing tags.
+*  `edit 3 v/` Clears the visit date and time for the 3rd contact.
 
 ![edit](images/ug_edit.png)
 
@@ -483,7 +485,7 @@ Action     | Format                                                             
 **Archive**| `archive INDEX`<br> | `archive 1`
 **List**   | `list [s/FIELD]`<br> | `list`<br>`list s/name`<br>`list s/visit`
 **List Archive** | `list-archive` | `list-archive`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_DATE_TIME] [t/TAG]…​`<br> | `edit 1 p/91234567 e/johndoe@example.com`<br> `edit 2 nt/ t/` *(clears note and tag)*
+**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_DATE_TIME] [t/TAG]…​`<br> | `edit 1 p/91234567 e/johndoe@example.com`<br> `edit 2 nt/ t/` *(clears note and tag)*<br> `edit 3 v/` *(clears visit date and time)*
 **Find**   | `find n/KEYWORD [MORE_KEYWORDS]…`<br>`find t/TAG`<br>`find d/DATE`<br>`find sd/START_DATE ed/END_DATE`<br> | `find n/James Jake`<br>`find t/caseid1`<br>`find d/today`<br>`find sd/2026-01-01 ed/2026-04-30`<br>
 **Note**   | `note INDEX nt/NOTE`<br> | `note 1 nt/Requires wheelchair assistance`<br>`note 2 nt/` *(clears note)*
 **Tag**    | `tag INDEX [at/TAG_TO_ADD]…​ [dt/TAG_TO_DELETE]…​`<br> | `tag 1 at/client dt/caseid1`
@@ -530,7 +532,8 @@ Action     | Format                                                             
   - Any minute not in the range of `00` to `59` (inclusive) is treated as invalid
   - Exceptions:
     - `24:00` is treated as `00:00` of the next day
-    - For any month that has a max date smaller than `31`, inputting an invalid date smaller than `31` (inclusive) will be rounded to the highest valid date<br><br>
+    - For any month that has a max date smaller than `31`, inputting an invalid date smaller than `31` (inclusive) will be rounded to the highest valid date
+  - Accepted values are saved in normalized form after coercion/validation<br><br>
 - **d/DATE, sd/DATE, ed/DATE**: Refers to the visit date of the contact.
   - Must be in `yyyy-MM-dd` format or use the `today` keyword to specify today's date
   - For any month that has a max date smaller than `31`, inputting an invalid date smaller than `31` (inclusive) will be rounded to the highest valid date<br><br>
