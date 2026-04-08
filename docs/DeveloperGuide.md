@@ -393,7 +393,7 @@ If successful, the selected contact’s details will be updated and saved.
 **MSS**
 
 1.  CareSync displays contact(s).
-2.  User specifies the ID of the contact and fields to be updated (e.g., `n/`, `p/`, `e/`, `a/`, `nt/`, `v/`, `t/`).
+2.  User specifies the ID of the contact and fields to be updated (e.g., note, phone number, email).
 3.  CareSync validates the new data.
 4.  CareSync updates the contact information.
 5.  CareSync displays a success message.
@@ -429,7 +429,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 **MSS**
 
 1.  CareSync displays contact(s).
-2.  User specifies the ***ID(s) or Range of ID(s)*** of the contacts to be deleted (e.g., delete 1 3-5).
+2.  User specifies the ***ID(s) or Range of ID(s)*** of the contacts to be deleted (e.g., `1 3-5`).
 3.  CareSync validates all specified contacts indexes.
 4.  CareSync removes the contact(s) from storage.
 5.  CareSync displays a success message and an updated list.
@@ -448,13 +448,13 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
      Use case resumes from step 4.
 
-**Use case: UC4 - Search Contact (Find)**
+**Use case: UC4 - Search Contact**
 
 **Guarantee:** Matching contact(s) are displayed to the user, if any. CareSync enforces a strict ***Single-Mode*** policy.
 
 **MSS**
 
-1.  User specifies a search criteria using exactly one prefix (`n/`, `t/`, `d/`, `sd/` + `ed/`).
+1.  User specifies exactly one search criterion (by name, tag, or visit date).
 2.  CareSync validates that no preamble exists and only one input search mode.
 3.  CareSync retrieves and displays matching contact(s).
 
@@ -478,8 +478,8 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
 **MSS**
 
-1.  User specifies the ID of the contact and provides a note (e.g., `note 1 nt/Needs extra assistance`).
-2.  CareSync updates the contact's note. (To clear a note, the user provides an empty `nt/` prefix).
+1.  User specifies the ID of the contact and provides a note.
+2.  CareSync updates (change or delete) the contact's note.
 3.  CareSync displays a success message.
 
     Use case ends.
@@ -488,7 +488,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
 **MSS**
 
-1.  User specifies the ID of the contact and tags to add (`at/`)or delete (`dt/`).
+1.  User specifies the ID of the contact and tags to add or delete.
 2.  CareSync validates the tags to add not exist and tags to delete exist.
 3.  CareSync updates the contact's tag set.
 
@@ -496,11 +496,16 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
 **Extensions**
 
-* 2a. Validation fails (e.g., deleting a tag the contact does not have).
+* 2a. No matching contact is found (e.g., invalid ID specified by the user).
 
-    * 2a1. CareSync displays an error message. ***No changes are applied***.
+    * 2a1. CareSync displays a message indicating no result.
     * Use case ends.
 
+* 2b. Validation fails (e.g., deleting a tag the contact does not have).
+
+    * 2b1. CareSync displays an error message. ***No changes are applied***.
+    * Use case ends.
+  
 **Use case: UC7 - Archive / Unarchive Contact**
 
 **MSS**
@@ -516,7 +521,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
 **MSS**
 
-1.  User requests to list contacts with a sort field (e.g., `list s/visit`).
+1.  User requests to list contacts with a sort field (e.g., name).
 2.  CareSync validates the field and reorders the list.
 3.  CareSync displays the sorted list. (Sorting will remain persistent until cleared).
 
@@ -526,8 +531,8 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
 **MSS**
 
-1.  User requests to see the archive list (`list-archive`).
-2.  CareSync filters and displays only contacts where boolean `isArchived` is true.
+1.  User requests to see the archive list.
+2.  CareSync filters and displays only archived contacts.
 
     Use case ends.
 
@@ -551,6 +556,47 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 3.  CareSync suggests or completes the command/prefix in the command box.
 
     Use case ends.
+
+**Use case: UC12 - View Help Information**
+
+**MSS**
+
+1.  User requests help (e.g., types help or clicks the help menu).
+2.  CareSync opens the help window containing the link to the User Guide.
+3.  CareSync focuses the help window.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. The help window is already open but hidden behind the main window.
+
+    * 2a1. CareSync brings it to the front of the screen.
+
+    Use case resumes at step 3.
+
+**Use case: UC13 -Access Command History**
+
+**MSS**
+
+1.  User is in the command input box.
+2.  User presses the `UP` or `DOWN` arrow key.
+3.  CareSync retrieves and displays the previous or next command from the session history.
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. There is no previous/next command in the history (e.g., user is at the start of the session).
+
+    * 2a1. CareSync maintains the current text in the input box.
+    * Use case ends.
+
+* 2b. The user has entered consecutive identical commands (e.g., `list`, then `list`).
+
+    * 2b1. CareSync collapses these into a single history entry.
+    * Use case resumes at step 3.
+
 
 ### Non-Functional Requirements
 
