@@ -645,8 +645,8 @@ Expected:
 !!**Positive Test Case 3: Add contacts with duplicate non-name fields**!!
 
 Steps:
-1. Run `add n/Alice One p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`.
-2. Run `add n/Alice Two p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`.
+1. Run `add n/Alice One p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`
+2. Run `add n/Alice Two p/88883333 e/alice@example.com a/Alice street, block 123, #01-01`
 
 Expected:
 - Both commands succeed.
@@ -676,7 +676,7 @@ Steps:
 1. Run `add n/Bob p/+-- e/bob@example.com a/Bob street, block 123, #01-01`
 
 Expected:
-- Command fails with message: `Phone numbers should be an 8-digit local number starting with 6, 8, or 9 (spaces or hyphens allowed as XXXX XXXX or XXXX-XXXX), a toll-free number in the format 1800 XXX XXXX, 1800-XXX-XXXX, or 1800XXXXXXX, or a valid emergency number (995, 999, 1700).`
+- Command fails with message: `Phone numbers should be at most 15 characters, contain only digits, plus (+), spaces, or hyphens (-), and include at least one digit.`
 
 !!**Negative Test Case 4: Invalid email**!!
 
@@ -743,8 +743,7 @@ Expected:
 !!**Positive Test Case 1: Archive by valid index**!!
 
 Steps:
-1. Run `list`.
-2. Run `archive 1`.
+1. Run `archive 1`
 
 Expected:
 - Command succeeds with `Archived: ...` message.
@@ -1060,7 +1059,7 @@ Expected:
 !!**Negative Test Case 2: Add existing tag**!!
 
 Steps:
-1. Ensure contact 1 already has `friends`.
+1. Ensure contact 1 already has `friends`
 2. Run `tag 1 at/friends`
 
 Expected:
@@ -1243,28 +1242,28 @@ Expected:
 !!**Positive Test Case 1: Autocomplete command word**!!
 
 Steps:
-1. Type `d`.
-2. Press `TAB`.
+1. Type `d`
+2. Press `TAB`
 
 Expected:
-- Input autocompletes to `delete`.
+- Input autocompletes to `delete`
 
 !!**Positive Test Case 2: Autocomplete prefixes**!!
 
 Steps:
-1. Type `add `.
+1. Type `add `
 2. Press `TAB` to insert the first prefix.
 3. Type a value for that parameter and add a trailing space.
 4. Press `TAB` again to get the next prefix.
 
 Expected:
-- Prefix suggestions are inserted in order, starting with `n/`.
+- Prefix suggestions are inserted in order, starting with `n/`
 
 !!**Positive Test Case 3: Autocomplete with index-required command**!!
 
 Steps:
-1. Type `edit ` and press `TAB`.
-2. Type `edit 1 ` and press `TAB`.
+1. Type `edit ` and press `TAB`
+2. Type `edit 1 ` and press `TAB`
 
 Expected:
 - Step 1: no prefix suggestion is accepted.
@@ -1273,11 +1272,11 @@ Expected:
 !!**Positive Test Case 4: Autocomplete stops when command becomes invalid**!!
 
 Steps:
-1. Type `find n/Alex ` and press `TAB`.
-2. Type `edit 1 n/Joe x/a ` and press `TAB`.
+1. Type `find n/Alex ` and press `TAB`
+2. Type `edit 1 n/Joe x/a ` and press `TAB`
 
 Expected:
-- Step 1: no additional prefix suggestion is accepted for `find`.
+- Step 1: no additional prefix suggestion is accepted for `find`
 - Step 2: no additional prefix suggestion is accepted because the command input is invalid.
 
 ### Remembering a command
@@ -1288,13 +1287,13 @@ Expected:
 !!**Positive Test Case 1: Recall older commands**!!
 
 Steps:
-1. Run `list`.
-2. Run `find n/Alex`.
+1. Run `list`
+2. Run `find n/Alex`
 3. Press `ARROW_UP` twice.
 
 Expected:
-- First `ARROW_UP`: command box shows `find n/Alex`.
-- Second `ARROW_UP`: command box shows `list`.
+- First `ARROW_UP`: command box shows `find n/Alex`
+- Second `ARROW_UP`: command box shows `list`
 
 !!**Positive Test Case 2: Navigate back down**!!
 
@@ -1307,7 +1306,7 @@ Expected:
 !!**Positive Test Case 3: Consecutive duplicates are not duplicated in history**!!
 
 Steps:
-1. Run `list`.
+1. Run `list`
 2. Run `list` again.
 3. Press `ARROW_UP` once.
 
