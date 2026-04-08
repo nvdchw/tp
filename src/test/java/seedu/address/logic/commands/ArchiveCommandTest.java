@@ -40,6 +40,7 @@ public class ArchiveCommandTest {
 
     @Test
     public void execute_validIndexUnfilteredList_success() {
+        // BVA: valid target index at the lower boundary of the unfiltered list, with the person not yet archived.
         Person personToArchive = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         ArchiveCommand archiveCommand = new ArchiveCommand(INDEX_FIRST_PERSON);
 
@@ -56,6 +57,7 @@ public class ArchiveCommandTest {
 
     @Test
     public void execute_invalidIndexUnfilteredList_throwsCommandException() {
+        // BVA: index is just beyond the upper boundary of the current list size, so the command should reject it.
         Index outOfBoundIndex = Index.fromOneBased(model.getFilteredPersonList().size() + 1);
         ArchiveCommand archiveCommand = new ArchiveCommand(outOfBoundIndex);
 
@@ -64,6 +66,7 @@ public class ArchiveCommandTest {
 
     @Test
     public void execute_validIndexFilteredList_success() {
+        // BVA: valid target index at the lower boundary after filtering the list down to a subset.
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Person personToArchive = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
@@ -82,6 +85,7 @@ public class ArchiveCommandTest {
 
     @Test
     public void execute_alreadyArchivedPerson_returnsMessagePersonAlreadyArchived() throws CommandException {
+        // EP (valid): target person is already archived, so the command should return the alternate message.
         // Archive a person first
         Person personToArchive = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         ArchiveCommand firstArchiveCommand = new ArchiveCommand(INDEX_FIRST_PERSON);
@@ -114,6 +118,7 @@ public class ArchiveCommandTest {
 
     @Test
     public void execute_invalidIndexFilteredList_throwsCommandException() {
+        // BVA: index is within the full list boundary but outside the current filtered view.
         showPersonAtIndex(model, INDEX_FIRST_PERSON);
 
         Index outOfBoundIndex = INDEX_SECOND_PERSON;

@@ -22,11 +22,13 @@ public class UnarchiveCommandParserTest {
 
     @Test
     public void parse_validArgs_returnsArchiveCommand() {
+        // BVA: minimum valid one-based index should parse successfully.
         assertParseSuccess(parser, "1", new UnarchiveCommand(INDEX_FIRST_PERSON));
     }
 
     @Test
     public void parse_invalidArgs_throwsParseException() {
+        // EP (invalid): non-numeric input should be rejected as invalid command format.
         assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, UnarchiveCommand.MESSAGE_USAGE));
     }
 }

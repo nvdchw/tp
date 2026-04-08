@@ -22,217 +22,192 @@ import seedu.address.logic.parser.exceptions.ParseException;
  */
 public class BulkIndexParserUtilTest {
 
-    private static final String USAGE_MESSAGE = "test usage";
-    private static final String INVALID_FORMAT_MESSAGE =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, USAGE_MESSAGE);
+    private static final String USAGE = "usage";
+    private static final String INVALID_FORMAT =
+            String.format(MESSAGE_INVALID_COMMAND_FORMAT, USAGE);
 
-    // Success Tests
+    // VALID INPUTS
 
+    // EP: valid single index
     @Test
-    public void parseBulkIndexes_singleIndex_success() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("1", USAGE_MESSAGE);
-        assertEquals(List.of(Index.fromOneBased(1)), result);
+    public void parse_single_success() throws Exception {
+        assertEquals(List.of(Index.fromOneBased(1)),
+                BulkIndexParserUtil.parseBulkIndexes("1", USAGE));
     }
 
+    // EP: multiple indexes
     @Test
-    public void parseBulkIndexes_multipleIndexes_success() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("1 2 3", USAGE_MESSAGE);
+    public void parse_multiple_success() throws Exception {
         assertEquals(List.of(
-                Index.fromOneBased(1),
-                Index.fromOneBased(2),
-                Index.fromOneBased(3)
-        ), result);
+                        Index.fromOneBased(1),
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(3)),
+                BulkIndexParserUtil.parseBulkIndexes("1 2 3", USAGE));
     }
 
+    // EP: valid range
     @Test
-    public void parseBulkIndexes_range_success() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("2-4", USAGE_MESSAGE);
+    public void parse_range_success() throws Exception {
         assertEquals(List.of(
-                Index.fromOneBased(2),
-                Index.fromOneBased(3),
-                Index.fromOneBased(4)
-        ), result);
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(3),
+                        Index.fromOneBased(4)),
+                BulkIndexParserUtil.parseBulkIndexes("2-4", USAGE));
     }
 
+    // EP: mixed input
     @Test
-    public void parseBulkIndexes_mixed_success() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("1 3-5", USAGE_MESSAGE);
+    public void parse_mixed_success() throws Exception {
         assertEquals(List.of(
-                Index.fromOneBased(1),
-                Index.fromOneBased(3),
-                Index.fromOneBased(4),
-                Index.fromOneBased(5)
-        ), result);
+                        Index.fromOneBased(1),
+                        Index.fromOneBased(3),
+                        Index.fromOneBased(4),
+                        Index.fromOneBased(5)),
+                BulkIndexParserUtil.parseBulkIndexes("1 3-5", USAGE));
     }
 
+    // EP: duplicates + unsorted
     @Test
-    public void parseBulkIndexes_duplicatesSuccess() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("1 1 1 2", USAGE_MESSAGE);
+    public void parse_duplicate_success() throws Exception {
         assertEquals(List.of(
-                Index.fromOneBased(1),
-                Index.fromOneBased(2)
-        ), result);
+                        Index.fromOneBased(1),
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(3)),
+                BulkIndexParserUtil.parseBulkIndexes("3 1 2 2", USAGE));
     }
 
+    // BOUNDARY VALUES
+
+    // BVA: single element range
     @Test
-    public void parseBulkIndexes_unsortedInputSuccess() throws Exception {
-        List<Index> result = BulkIndexParserUtil.parseBulkIndexes("5 1 3", USAGE_MESSAGE);
-        assertEquals(List.of(
-                Index.fromOneBased(1),
-                Index.fromOneBased(3),
-                Index.fromOneBased(5)
-        ), result);
+    public void parse_rangeSingle_success() throws Exception {
+        assertEquals(List.of(Index.fromOneBased(3)),
+                BulkIndexParserUtil.parseBulkIndexes("3-3", USAGE));
     }
 
-    // Failure Tests
-
+    // BVA: max allowed range
     @Test
-    public void parseBulkIndexes_whitespaceOnlyInput_throwsParseException() {
-        assertThrows(ParseException.class, INVALID_FORMAT_MESSAGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("   ", USAGE_MESSAGE));
+    public void parse_rangeMax_success() throws Exception {
+        assertEquals(100,
+                BulkIndexParserUtil.parseBulkIndexes("1-100", USAGE).size());
     }
 
+    // BVA: range too large
     @Test
-    public void parseBulkIndexes_nullInput_throwsParseException() {
-        assertThrows(ParseException.class, INVALID_FORMAT_MESSAGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes(null, USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_emptyInput_throwsParseException() {
-        assertThrows(ParseException.class, INVALID_FORMAT_MESSAGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_plusSignIndex_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("+1", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_signedRange_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("+1-2", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_trailingDash_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-2-", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_invalidCharacterInNumber_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-10a", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_multipleDashes_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-2-3", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_invalidRangeLeftSide_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("a-1", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_invalidRangeRightSide_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-a", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_rangeWithZeroStart_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                BulkIndexParserUtil.parseBulkIndexes("0-5", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_rangeWithZeroEnd_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                BulkIndexParserUtil.parseBulkIndexes("5-0", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_rangeWithZero_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-0", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_malformedRangeToken_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1--3", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_rangeIndexTooLarge_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_RANGE_INDEX_LARGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("999999999999-999999999999", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_indexTooLarge_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INDEX_TOO_LARGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("999999999999999999999999", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_nonNumericRangeParts_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("a-b", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_invalidToken_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1,2", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_negativeIndex_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                BulkIndexParserUtil.parseBulkIndexes("-1", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_zeroIndex_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
-                BulkIndexParserUtil.parseBulkIndexes("0", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_invalidRange_throwsParseException() {
-        assertThrows(ParseException.class, MESSAGE_INVALID_RANGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("5-3", USAGE_MESSAGE));
-    }
-
-    @Test
-    public void parseBulkIndexes_largeRange_throwsParseException() {
+    public void parse_rangeTooLarge_failure() {
         assertThrows(ParseException.class, MESSAGE_RANGE_TOO_LARGE, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1-200", USAGE_MESSAGE));
+                BulkIndexParserUtil.parseBulkIndexes("1-101", USAGE));
     }
 
+    // BVA: max integer
     @Test
-    public void parseBulkIndexes_invalidMixedInput_throwsParseException() {
+    public void parse_maxInt_success() throws Exception {
+        assertEquals(List.of(Index.fromOneBased(2147483647)),
+                BulkIndexParserUtil.parseBulkIndexes("2147483647", USAGE));
+    }
+
+    // BVA: integer overflow
+    @Test
+    public void parse_overflow_failure() {
+        assertThrows(ParseException.class, MESSAGE_INDEX_TOO_LARGE, () ->
+                BulkIndexParserUtil.parseBulkIndexes("2147483648", USAGE));
+    }
+
+    // BVA: range max integer
+    @Test
+    public void parse_rangeMaxInt_success() throws Exception {
+        assertEquals(List.of(Index.fromOneBased(2147483647)),
+                BulkIndexParserUtil.parseBulkIndexes("2147483647-2147483647", USAGE));
+    }
+
+    // BVA: range overflow
+    @Test
+    public void parse_rangeOverflow_failure() {
+        assertThrows(ParseException.class, MESSAGE_RANGE_INDEX_LARGE, () ->
+                BulkIndexParserUtil.parseBulkIndexes("2147483647-2147483648", USAGE));
+    }
+
+    // BVA: zero index
+    @Test
+    public void parse_zero_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
+                BulkIndexParserUtil.parseBulkIndexes("0", USAGE));
+    }
+
+    // BVA: negative index
+    @Test
+    public void parse_negative_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_INDEX, () ->
+                BulkIndexParserUtil.parseBulkIndexes("-1", USAGE));
+    }
+
+    // INVALID INPUTS
+
+    // EP: empty input
+    @Test
+    public void parse_empty_failure() {
+        assertThrows(ParseException.class, INVALID_FORMAT, () ->
+                BulkIndexParserUtil.parseBulkIndexes("", USAGE));
+    }
+
+    // EP: invalid token
+    @Test
+    public void parse_invalidToken_failure() {
         assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
-                BulkIndexParserUtil.parseBulkIndexes("1 a 3", USAGE_MESSAGE));
+                BulkIndexParserUtil.parseBulkIndexes("a", USAGE));
     }
 
+    // EP: invalid format (comma)
     @Test
-    public void parseSingleIndexOrThrow_multipleTokens_throwsParseException() {
-        assertThrows(ParseException.class, "usage", () ->
-                ParserUtil.parseSingleIndexOrThrow("1 2", "usage"));
+    public void parse_invalidFormat_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
+                BulkIndexParserUtil.parseBulkIndexes("1,2", USAGE));
     }
 
+    // EP: invalid token with plus sign
     @Test
-    public void parseSingleIndexOrThrow_invalidFormat_throwsParseException() {
-        assertThrows(ParseException.class, "usage", () ->
-                ParserUtil.parseSingleIndexOrThrow("abc", "usage"));
+    public void parse_plusSign_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
+                BulkIndexParserUtil.parseBulkIndexes("+1", USAGE));
+    }
+
+    // EP: invalid range
+    @Test
+    public void parse_invalidRange_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_RANGE, () ->
+                BulkIndexParserUtil.parseBulkIndexes("5-3", USAGE));
+    }
+
+    // EP: malformed range token
+    @Test
+    public void parse_malformedRange_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
+                BulkIndexParserUtil.parseBulkIndexes("1--3", USAGE));
+    }
+
+    // EP: non-numeric range part
+    @Test
+    public void parse_nonNumericRange_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
+                BulkIndexParserUtil.parseBulkIndexes("1-a", USAGE));
+    }
+
+    // EDGE / HEURISTIC
+
+    // Heuristic: mixed valid + invalid
+    @Test
+    public void parse_mixedInvalid_failure() {
+        assertThrows(ParseException.class, MESSAGE_INVALID_TOKEN, () ->
+                BulkIndexParserUtil.parseBulkIndexes("1 a 3", USAGE));
+    }
+
+    // Heuristic: whitespace
+    @Test
+    public void parse_whitespace_success() throws Exception {
+        assertEquals(List.of(
+                        Index.fromOneBased(1),
+                        Index.fromOneBased(2),
+                        Index.fromOneBased(3)),
+                BulkIndexParserUtil.parseBulkIndexes("  1   2   3  ", USAGE));
     }
 }

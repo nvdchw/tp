@@ -58,6 +58,7 @@ public class FindCommandTest {
 
     @Test
     public void execute_zeroKeywords_noPersonFound() {
+        // EP (valid): empty keyword input is allowed and should yield no matches.
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 0);
         NameContainsKeywordsPredicate predicate = preparePredicate(" ");
         FindCommand command = new FindCommand(predicate);
@@ -68,6 +69,7 @@ public class FindCommandTest {
 
     @Test
     public void execute_multipleKeywords_multiplePersonsFound() {
+        // EP (valid): multiple valid keywords should match multiple persons.
         String expectedMessage = String.format(MESSAGE_PERSONS_LISTED_OVERVIEW, 3);
         NameContainsKeywordsPredicate predicate = preparePredicate("Kurz Elle Kunz");
         FindCommand command = new FindCommand(predicate);
@@ -78,6 +80,7 @@ public class FindCommandTest {
 
     @Test
     public void execute_matchingArchivedPerson_excludedFromResults() {
+        // EP (valid): archived persons are excluded from the filtered results.
         Person carlInModel = model.getFilteredPersonList().stream()
                 .filter(p -> p.getName().fullName.equals("Carl Kurz"))
                 .findFirst()

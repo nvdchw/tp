@@ -20,11 +20,13 @@ public class ArchiveCommandParserTest {
 
     private ArchiveCommandParser parser = new ArchiveCommandParser();
 
+    // EP/BVA: minimum valid one-based index should parse successfully.
     @Test
     public void parse_validArgs_returnsArchiveCommand() {
         assertParseSuccess(parser, "1", new ArchiveCommand(INDEX_FIRST_PERSON));
     }
 
+    // EP (invalid): non-numeric input should be rejected as invalid command format.
     @Test
     public void parse_invalidArgs_throwsParseException() {
         assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, ArchiveCommand.MESSAGE_USAGE));

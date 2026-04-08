@@ -28,6 +28,7 @@ public class AddCommandIntegrationTest {
 
     @Test
     public void execute_newPerson_success() {
+        // EP (valid): adding a new non-duplicate person succeeds.
         Person validPerson = new PersonBuilder().build();
 
         Model expectedModel = new ModelManager(model.getAddressBook(), new UserPrefs());
@@ -40,6 +41,7 @@ public class AddCommandIntegrationTest {
 
     @Test
     public void execute_duplicatePerson_throwsCommandException() {
+        // EP (invalid): adding a duplicate person fails.
         Person personInList = model.getAddressBook().getPersonList().get(0);
         assertCommandFailure(new AddCommand(personInList), model,
                 AddCommand.MESSAGE_DUPLICATE_PERSON);

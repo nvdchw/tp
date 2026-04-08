@@ -13,7 +13,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
+import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.core.index.Index;
 import seedu.address.logic.parser.exceptions.ParseException;
 
@@ -24,6 +26,8 @@ public final class BulkIndexParserUtil {
 
     private static final int MAX_RANGE_SIZE = 100;
     private static final String RANGE_SEPARATOR = "-";
+
+    private static final Logger logger = LogsCenter.getLogger(BulkIndexParserUtil.class);
 
     private BulkIndexParserUtil() {}
 
@@ -37,6 +41,7 @@ public final class BulkIndexParserUtil {
      *                        or contains invalid indices or ranges
      */
     public static List<Index> parseBulkIndexes(String args, String usageMessage) throws ParseException {
+        logger.info("Parsing bulk indexes from input: " + args);
         String[] tokens = tokenizeOrThrow(args, usageMessage);
         Set<Integer> indexSet = collectOneBasedIndexes(tokens);
         return toSortedUnmodifiableIndexList(indexSet);
