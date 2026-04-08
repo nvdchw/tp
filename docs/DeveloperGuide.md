@@ -1092,7 +1092,7 @@ Expected:
 !!**Positive Test Case 2: Delete multiple indexes and range**!!
 
 Steps:
-1. Run `delete 1 3-4 6`
+1. Run `delete 1 3-4 5`
 
 Expected:
 - All specified contacts are deleted in one command.
@@ -1119,7 +1119,7 @@ Steps:
 1. Run `delete 1 999`
 
 Expected:
-- Command fails with message: `Invalid indices: 999. Person does not exist in current list.`
+- Command fails with message: `Invalid indices: 999. Contact does not exist in current list.`
 
 !!**Negative Test Case 3: Invalid token**!!
 
@@ -1127,7 +1127,39 @@ Steps:
 1. Run `delete a`
 
 Expected:
-- Command fails with message: `Invalid command format! Usage: delete INDEX...`
+- Command fails with message: `Invalid input. Only numbers and ranges like 1 or 3-5 are allowed.`
+
+!!**Negative Test Case 4: Range too large**!!
+
+Steps:
+1. Run `delete 1-150`
+
+Expected:
+- Command fails with message: `Range too large. A range can include at most 100 indices (inclusive of both start and end).`
+
+!!**Negative Test Case 5: Index specified in range is too large**!!
+
+Steps:
+1. Run `delete 19999999999-20000000000`
+
+Expected:
+- Command fails with message: `Index specified for range is too large. Please specify a smaller index.`
+
+!!**Negative Test Case 6: Invalid index**!!
+
+Steps:
+1. Run `delete -1`
+
+Expected:
+- Command fails with message: `Invalid index. Index must be a non-zero positive number (1, 2, 3...).`
+
+!!**Negative Test Case 7: Index too large**!!
+
+Steps:
+1. Run `delete 10000000000`
+
+Expected:
+- Command fails with message: `Index too large. Please specify a valid index.`
 
 ### Unarchiving a contact : `unarchive`
 
