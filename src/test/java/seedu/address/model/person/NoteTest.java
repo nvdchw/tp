@@ -15,6 +15,17 @@ public class NoteTest {
     }
 
     @Test
+    public void constructor_invalidNote_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new Note("bad!note"));
+    }
+
+    @Test
+    public void constructor_noteAboveMaxLength_throwsIllegalArgumentException() {
+        String tooLong = "a".repeat(Note.MAX_LENGTH + 1);
+        assertThrows(IllegalArgumentException.class, () -> new Note(tooLong));
+    }
+
+    @Test
     public void isValidNote() {
         // null note
         assertThrows(NullPointerException.class, () -> Note.isValidNote(null));

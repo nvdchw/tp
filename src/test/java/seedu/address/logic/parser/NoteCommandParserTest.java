@@ -32,6 +32,21 @@ public class NoteCommandParserTest {
     }
 
     @Test
+    public void parse_invalidNoteValue_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String userInput = targetIndex.getOneBased() + " " + PREFIX_NOTE + "invalid!";
+        assertParseFailure(parser, userInput, Note.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
+    public void parse_noteAboveMaxLength_failure() {
+        Index targetIndex = INDEX_FIRST_PERSON;
+        String tooLong = "a".repeat(Note.MAX_LENGTH + 1);
+        String userInput = targetIndex.getOneBased() + " " + PREFIX_NOTE + tooLong;
+        assertParseFailure(parser, userInput, Note.MESSAGE_CONSTRAINTS);
+    }
+
+    @Test
     public void parse_missingCompulsoryField_failure() {
         String expectedMessage = String.format(MESSAGE_INVALID_COMMAND_FORMAT, NoteCommand.MESSAGE_USAGE);
         Index targetIndex = INDEX_FIRST_PERSON;

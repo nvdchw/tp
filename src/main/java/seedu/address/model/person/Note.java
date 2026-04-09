@@ -1,6 +1,7 @@
 package seedu.address.model.person;
 
 import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.util.AppUtil.checkArgument;
 
 /**
  * Represents a Person's note in the address book.
@@ -27,7 +28,9 @@ public class Note {
      */
     public Note(String note) {
         requireNonNull(note);
-        this.value = note;
+        String trimmedNote = note.trim();
+        checkArgument(isValidNote(trimmedNote), MESSAGE_CONSTRAINTS);
+        this.value = trimmedNote;
     }
 
     /**
@@ -38,7 +41,7 @@ public class Note {
     }
 
     /**
-     * Returns true if this VisitDateTime has a value.
+     * Returns true if this Note has a value.
      */
     public boolean isPresent() {
         return !value.isEmpty();
