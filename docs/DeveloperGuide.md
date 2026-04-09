@@ -884,7 +884,23 @@ Steps:
 Expected:
 - Command succeeds and tags for contact 1 are cleared.
 
-!!**Positive Test Case 4: Duplicate tag values**!!
+!!**Positive Test Case 4: Clear note using `nt/`**!!
+
+Steps:
+1. Run `edit 1 nt/`
+
+Expected:
+- Command succeeds and note for contact 1 is cleared.
+
+!!**Positive Test Case 5: Clear visit date and time using `v/`**!!
+
+Steps:
+1. Run `edit 1 v/`
+
+Expected:
+- Command succeeds and visit date and time for contact 1 are cleared.
+
+!!**Positive Test Case 6: Duplicate tag values**!!
 
 Steps:
 1. Run `edit 1 t/friend t/Friend`
