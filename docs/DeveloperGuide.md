@@ -1121,7 +1121,7 @@ Expected:
 - At least 5 contacts exist.
 - Run `list` before each INDEX-based test case.
 - There are fewer than 999 contacts.
-- Refer to [User Guide: Deleting contacts](UserGuide.md#deleting-contacts-delete) for index/range syntax rules
+- Refer to [User Guide: Deleting contacts](UserGuide.md#deleting-contact-s-delete) for index/range syntax rules
 
 !!**Positive Test Case 1: Delete single index**!!
 
