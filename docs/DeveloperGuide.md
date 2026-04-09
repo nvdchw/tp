@@ -96,7 +96,7 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <puml src="diagrams/LogicClassDiagram.puml" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` API call as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1 3 6-9")` API call as an example.
 
 <puml src="diagrams/DeleteSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the `delete 1` Command" />
 
@@ -164,103 +164,81 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Archive Feature
 
 #### Proposed Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+The archive mechanism is facilitated by an archive flag stored in each Person.
+A person is considered archived when this flag is true, and active otherwise.
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+The mechanism uses the following Model operations:
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+- archivePerson(person): marks a person as archived.
+- unarchivePerson(person): marks a person as active again.
+- updateFilteredPersonList(predicate): refreshes the displayed list for the current command context.
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+Given below is an example usage scenario and how the archive mechanism behaves at each step.
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user executes archive 1.
+The archive command validates the index against the current filtered list and archives the selected person.
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+Step 2. The command refreshes the filtered list using the current predicate so the UI reflects the updated state.
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 3. The user executes list-archive.
+The displayed list is filtered to show only archived persons.
 
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
+Step 4. The user executes unarchive 1 from the archived list.
+The unarchive command marks the selected person as active again and refreshes the list.
 
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
+Step 5. The command result is returned to Logic, and Logic persists the updated address book through Storage.
 
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
+The following sequence diagram shows how an archive operation goes through the Logic component:
 
-<box type="info" seamless>
-
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
-
-</box>
-
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
-
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
-
+<puml src="diagrams/ArchiveSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the archive command" />
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+**Note:** The lifeline for ArchiveCommandParser should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
 
 </box>
 
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
+Similarly, how an archive operation goes through the Model component is shown below:
 
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
+<puml src="diagrams/ArchiveSequenceDiagram-Model.puml" width="420" />
+
+The unarchive command does the opposite. It calls unarchivePerson(person), which restores the selected person to active state.
 
 <box type="info" seamless>
 
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+**Note:** If the selected index is invalid, the command returns an error instead of modifying data.
+**Note:** list-archive filtering is applied through updateFilteredPersonList(predicate), not inside archivePerson(...).
 
 </box>
 
-Similarly, how an undo operation goes through the `Model` component is shown below:
+The following activity diagram summarizes what happens when a user executes the archive command:
 
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
+<puml src="diagrams/ArchiveActivityDiagram.puml" width="420" />
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
+**Note:** If the command returns an error (for example invalid index), no data is modified.
+**Note:** After successful command execution, Logic persists the current address book through Storage.
 
 </box>
 
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
+#### Design considerations
 
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
+Aspect: How archived data is represented
 
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
+1. Alternative 1 (current choice): Keep an archive flag in each Person.
+   - Pros: Minimal structural changes, straightforward persistence, low implementation overhead.
+   - Cons: Filtering predicates must be applied consistently across commands.
 
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
+2. Alternative 2: Move archived persons into a separate collection.
+   - Pros: Strong conceptual separation between active and archived contacts.
+   - Cons: Higher complexity for edit, find, delete, indexing, and synchronization logic.
 
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
-
-#### Design considerations:
-
-**Aspect: How undo & redo executes:**
-
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
-
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
-
-_{more aspects and alternatives to be added}_
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
-
+{more aspects and alternatives to be added}
 
 --------------------------------------------------------------------------------------------------------------------
 
