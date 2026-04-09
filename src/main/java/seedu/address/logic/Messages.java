@@ -43,7 +43,6 @@ public class Messages {
     public static final String MESSAGE_INVALID_SORT_FIELD =
             "Invalid sort field. Valid options are: name, visit";
 
-    public static final String MESSAGE_DUPLICATE_TAGS = "Duplicate tags detected! Tag names are case-insensitive";
 
     /**
      * Returns an error message indicating the duplicate prefixes.

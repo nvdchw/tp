@@ -84,7 +84,7 @@ public class TagCommandTest {
 
         TagCommand tagCommand = new TagCommand(INDEX_FIRST_PERSON, new HashSet<>(), tagsToDelete);
 
-        String expectedMessage = "The tag [" + tagName + "] not exist, cannot be deleted.";
+        String expectedMessage = "The tag [" + tagName + "] does not exist, cannot be deleted.";
 
         assertCommandFailure(tagCommand, model, expectedMessage);
     }

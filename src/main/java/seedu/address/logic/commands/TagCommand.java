@@ -79,7 +79,7 @@ public class TagCommand extends Command {
         // check if tag to delete exists
         for (Tag tag : tagsToDelete) {
             if (!currentTags.contains(tag)) {
-                throw new CommandException("The tag [" + tag.tagName + "] not exist, cannot be deleted.");
+                throw new CommandException("The tag [" + tag.tagName + "] does not exist, cannot be deleted.");
             }
         }
 
