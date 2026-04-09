@@ -228,6 +228,7 @@ Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [nt/NOTE] [v/VISIT_
 * **At least one of the optional fields** must be provided.
 * Existing values will be updated to the input values.
 * Use `v/` with no value to clear the contact's visit date and time.
+* Use `nt/` with no value to clear the contact's note.
 * When editing tags, the **existing tags of the contact will be removed** i.e adding of tags is not cumulative.
 * You can remove all the contact's tags by typing `t/` without
     specifying any tags after it.
