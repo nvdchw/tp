@@ -631,8 +631,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 ### Non-Functional Requirements
 
 1. Should work on any mainstream OS as long as it has Java 17 or above installed.
-2. A user with above average typing speed for regular English text (i.e. not code, not system
-admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+2. A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
 3. The system should respond to user commands within 2 seconds under normal usage.
 4. The system should support at least 20 contacts without noticeable performance degradation.
 5. Filtering and search operations should complete within 2 seconds.
@@ -645,9 +644,7 @@ admin commands) should be able to accomplish most of the tasks faster using comm
 12. Contact names shall not be empty.
 13. Phone numbers shall follow a defined format.
 14. Dates and times shall follow a consistent format.
-15. Duplicate contacts shall not be allowed unless explicitly permitted.
-14. The system architecture should allow future expansion of features (e.g., additional
-commands or data fields) without requiring major restructuring of existing components.
+15. The system architecture should allow future expansion of features (e.g., additional commands or data fields) without requiring major restructuring of existing components.
 
 *{More may be added in the future}*
 
