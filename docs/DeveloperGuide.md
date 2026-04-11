@@ -605,7 +605,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 
     Use case resumes at step 3.
 
-**Use case: UC13 -Access Command History**
+**Use case: UC13 - Access Command History**
 
 **MSS**
 
