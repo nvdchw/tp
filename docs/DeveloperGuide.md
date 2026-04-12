@@ -1506,3 +1506,13 @@ Steps:
 
 Expected:
 - Changes are saved correctly in `addressbook.json`
+
+
+--------------------------------------------------------------------------------------------------------------------
+## **Appendix: Planned Enhancement**
+Team Size: 5
+1. **Adjust name validation constraints:** The current regex rejects legitimate names (e.g., names contain hyphens), preventing record accurate details for clients with diverse names. We will update the validation logic based on actual needs to accept a wider range of naming conventions.
+2. **Fix sorting list feature flaws:** Currently, since the application allows users to add past dates for next visits, sorting by date will place past dates at the top, forcing users to scroll past irrelevant data. We plan to add a separate section specifically for displaying past visit dates, ensuring the list sorted by next visit date displays effectively.
+3. **Add confirmation prompts for destructive actions:** Currently, the application executes the `clear` and `delete` commands immediately without any warning, increasing the risk of accidental data loss. We plan to require a mandatory `--force` flag for these commands, ensuring users to explicitly confirm their risky intent.
+4. **Enforce exact matching for Case ID search:** Currently, the tag search function uses partial prefix matching, which means that searching for a specific case (e.g., `caseid1`) will incorrectly return irrelevant cases, such as `caseid10` and `caseid11`. This contradicts the system's definition of case IDs as unique identifiers. We plan to implement strict exact matching specifically for case ID tag to retrieve the exact target cases.
+5. **Enhance email validation:** Currently, the application accepts invalid email formats (e.g., missing domains), leading to unusable data for contacts. We plan to enforce stricter validation, requiring complete domain names to ensure all stored email addresses are accurate and valid.
