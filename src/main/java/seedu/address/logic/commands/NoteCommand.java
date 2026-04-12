@@ -57,7 +57,7 @@ public class NoteCommand extends Command {
                 personToEdit.getAddress(), note, personToEdit.getTags(), personToEdit.getVisitDateTime(),
                 personToEdit.isArchived());
         model.setPerson(personToEdit, editedPerson);
-        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+        model.updateFilteredPersonList(model.getCurrentPredicate());
 
         return new CommandResult(updateNoteMsg(editedPerson));
     }
