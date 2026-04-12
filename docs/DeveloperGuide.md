@@ -185,63 +185,63 @@ This section describes some noteworthy details on how certain features are imple
 
 ### Archive Feature
 
-#### Proposed Implementation
+#### Implementation
 
-The archive mechanism is facilitated by an archive flag stored in each Person.
-A person is considered archived when this flag is true, and active otherwise.
+The `archive` mechanism is facilitated by an archive flag stored in each contact.
+A contact is considered archived when this flag is true, and active otherwise.
 
 The mechanism uses the following Model operations:
 
-- archivePerson(person): marks a person as archived.
-- unarchivePerson(person): marks a person as active again.
-- updateFilteredPersonList(predicate): refreshes the displayed list for the current command context.
+- `archivePerson(person)`: marks a contact as archived.
+- `unarchivePerson(person)`: marks a contact as active again.
+- `updateFilteredPersonList(predicate)`: refreshes the displayed list for the current command context.
 
 Given below is an example usage scenario and how the archive mechanism behaves at each step.
 
-Step 1. The user executes archive 1.
-The archive command validates the index against the current filtered list and archives the selected person.
+Step 1. The user executes `archive 1`.
+The `archive` command validates the index against the current filtered list and archives the selected contact.
 
 Step 2. The command refreshes the filtered list using the current predicate so the UI reflects the updated state.
 
-Step 3. The user executes list-archive.
-The displayed list is filtered to show only archived persons.
+Step 3. The user executes `list-archive`.
+The displayed list is filtered to show only archived contacts.
 
-Step 4. The user executes unarchive 1 from the archived list.
-The unarchive command marks the selected person as active again and refreshes the list.
+Step 4. The user executes `unarchive 1` from the archived list.
+The `unarchive` command marks the selected contact as active again and refreshes the list.
 
-Step 5. The command result is returned to Logic, and Logic persists the updated address book through Storage.
+Step 5. The command result is returned to `Logic`, and `Logic` persists the updated address book through `Storage`.
 
-The following sequence diagram shows how an archive operation goes through the Logic component:
+The following sequence diagram shows how an `archive` operation goes through the `Logic` component:
 
 <puml src="diagrams/ArchiveSequenceDiagram.puml" alt="Interactions Inside the Logic Component for the archive command" />
 
 <box type="info" seamless>
 
-**Note:** The lifeline for ArchiveCommandParser should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
+**Note:** The lifeline for `ArchiveCommandParser` should end at the destroy marker (X), but due to a limitation of PlantUML, the lifeline continues till the end of the diagram.
 
 </box>
 
-Similarly, how an archive operation goes through the Model component is shown below:
+Similarly, how an `archive` operation goes through the `Model` component is shown below:
 
 <puml src="diagrams/ArchiveSequenceDiagram-Model.puml" width="420" />
 
-The unarchive command does the opposite. It calls unarchivePerson(person), which restores the selected person to active state.
+The `unarchive` command does the opposite. It calls `unarchivePerson(person)`, which restores the selected contact to active state.
 
 <box type="info" seamless>
 
 **Note:** If the selected index is invalid, the command returns an error instead of modifying data.
-**Note:** list-archive filtering is applied through updateFilteredPersonList(predicate), not inside archivePerson(...).
+**Note:** `list-archive` filtering is applied through `updateFilteredPersonList(predicate)`, not inside `archivePerson(...)`.
 
 </box>
 
-The following activity diagram summarizes what happens when a user executes the archive command:
+The following activity diagram summarizes what happens when a user executes the `archive` command:
 
 <puml src="diagrams/ArchiveActivityDiagram.puml" width="420" />
 
 <box type="info" seamless>
 
 **Note:** If the command returns an error (for example invalid index), no data is modified.
-**Note:** After successful command execution, Logic persists the current address book through Storage.
+**Note:** After successful command execution, Logic persists the current address book through `Storage`.
 
 </box>
 
@@ -253,7 +253,8 @@ Aspect: How archived data is represented
    - Pros: Minimal structural changes, straightforward persistence, low implementation overhead.
    - Cons: Filtering predicates must be applied consistently across commands.
 
-2. Alternative 2: Move archived persons into a separate collection.
+
+2. Alternative 2: Move archived contacts into a separate collection.
    - Pros: Strong conceptual separation between active and archived contacts.
    - Cons: Higher complexity for edit, find, delete, indexing, and synchronization logic.
 
@@ -1516,3 +1517,50 @@ Team Size: 5
 3. **Add confirmation prompts for destructive actions:** Currently, the application executes the `clear` and `delete` commands immediately without any warning, increasing the risk of accidental data loss. We plan to require a mandatory `--force` flag for these commands, ensuring users to explicitly confirm their risky intent.
 4. **Enforce exact matching for Case ID search:** Currently, the tag search function uses partial prefix matching, which means that searching for a specific case (e.g., `caseid1`) will incorrectly return irrelevant cases, such as `caseid10` and `caseid11`. This contradicts the system's definition of case IDs as unique identifiers. We plan to implement strict exact matching specifically for case ID tag to retrieve the exact target cases.
 5. **Enhance email validation:** Currently, the application accepts invalid email formats (e.g., missing domains), leading to unusable data for contacts. We plan to enforce stricter validation, requiring complete domain names to ensure all stored email addresses are accurate and valid.
+--------------------------------------------------------------------------------------------------------------------
+
+## **Appendix: Effort**
+
+This appendix summarises the overall effort put in by the team for CareSync. Using AB3 as a reference point, it also details the difficulty level, challenges faced, achievements and reuse of the project.
+
+##### Difficulty Level
+
+AB3 manages a single entity with basic features such as:
+- Adding a person
+- Editing a person
+- Deleting a person
+- Finding a person by name
+- Listing all persons
+
+CareSync builds upon these existing features and introduces even more complex features aimed to provide real value to our target users:
+- Adding notes to contacts
+- Storing clients' visit date and time
+- Finding contacts by tag or visit date
+- Sorting the contact list by name or visit date-time
+- Bulk delete operation
+- Archiving contacts
+- Autocomplete commands
+- Cycle through past commands for reuse
+
+Additionally, CareSync introduces constraints of higher complexity in order to reduce bugs and ensure consistency:
+- `NAME`, `PHONE_NUMBER`, `EMAIL`, `ADDRESS`, `NOTE` - character validity and length constraints
+- `TAG` - case-insensitive (for duplicate removal) and length constraints
+- `find` command - mutual exclusivity for search modes and usage of special keywords (i.e. `today`)
+- `delete` command - range index validation
+- Autocomplete - command validity check before suggestions
+- Command History - Collapsing consecutive identical commands
+
+Compared to AB3's single entity workflow, CareSync required more cross-feature validation, parser disambiguation and logic-model-storage-UI synchronisation due to richer contact lifecycle management. The combination of improving features and constraints demanded intricate designing and testing to ensure CareSync's correctness. Moreover, CareSync was built with code quality and design principles in mind, which required further refactoring and architectural deliberation. Some challenges faced include:
+- **Parser and command interaction complexity:** Features such as find modes, today keyword handling, bulk range deletion, autocomplete and command history introduced many edge cases where it might not work as intended. Thus, we had to carefully define precedence and rejection conditions to avoid ambiguous behaviour. One concrete example would be range deletion whereby the original implementation was vulnerable to an integer overflow when the user supplied `MAX_INT`. Therefore, we had to intentionally change the counting variable to `long` in order to patch this bug/vulnerability. This also shows our rigorous testing process when we introduce new features.
+- **Validation consistency across fields:** Enforcing strict constraints for multiple fields and ensuring consistent error handling/messages required substantial effort, especially for boundary cases and invalid combinations of inputs. For instance, the autocomplete feature presented many edge case bugs that we had to remedy, such as `add x n` suggesting `/` or `add n/ x/ ` suggesting `p/` even though both commands entered were already invalid.
+- **Data and model evolution risks:** Adding new data fields and archive-related behaviour required careful updates across logic, model, storage and UI layers so existing data remains valid and behaviour stays backward compatible.
+
+#### Achievements
+
+- **Disciplined Git Workflow:** Followed a strict branch-based forking workflow, ensuring that the `master` branch remained stable at all times, with effective collaboration via pull requests and code reviews.
+- **Comprehensive Testing:** Ensured that code coverage did not drop below initial AB3 levels and documented equivalent partitions / boundary values for test cases in order to aid with future development.
+- **Code Quality Adherence:** Achieved a high degree of maintainability and quality by strictly following coding standards, design principles and *SLAPPING hard*.
+- **Rigorous Input Validation:** Implemented many validating methods to guarantee correctness especially for boundary values.
+
+#### Reuse
+CareSync being built on top of AB3, reuses a significant portion of AB3's architecture and codebase. These include the already existing MVC pattern architecture, command pattern architecture, Jackson-based JSON storage, JavaFX UI, JUnit test cases, Gradle configuration and documentation site structure. AB3's existing features such as `add` and `delete` were adapted to create CareSync's version, and JavaFX UI elements were added onto to allow for notes and visit date-times.
