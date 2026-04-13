@@ -537,7 +537,7 @@ If successful, the specified contact(s) will be permanently removed from CareSyn
 1.  User requests to list contacts with a sort field (e.g., name).
 2.  CareSync validates the specified field.
 3.  CareSync sorts the contact list according to the field.
-4.  CareSync displays the sorted list. (Sorting will remain persistent until cleared).
+4.  CareSync displays the sorted list. (Sorting will remain persistent until a new sort field is requested).
 
     Use case ends.
 
@@ -1148,7 +1148,7 @@ Steps:
 1. Run `note 1`
 
 Expected:
-- Command fails with message: `Inote: Edits the note of the contact...`
+- Command fails with message: `Invalid command format! note: Edits the note of the contact...`
 
 !!**Negative Test Case 2: Invalid index**!!
 
