@@ -237,7 +237,7 @@ The `unarchive` command does the opposite. It calls `unarchivePerson(person)`, w
 
 The following activity diagram summarizes what happens when a user executes the `archive` command:
 
-<puml src="diagrams/ArchiveActivityDiagram.puml" width="420" />
+<puml src="diagrams/ArchiveActivityDiagram.puml" width="500" />
 
 <box type="info" seamless>
 
