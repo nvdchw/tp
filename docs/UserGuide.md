@@ -8,7 +8,7 @@
 
 CareSync is a desktop application designed for **Social Workers in Singapore** to manage client and support organization contact details, as well as track home visit schedules efficiently.
 
-CareSync is **optimized for use via a Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, CareSync can get your contact management tasks done faster than traditional GUI applications.
+CareSync is **optimized for use via a Command Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, CareSync can get your contact management tasks done faster than traditional GUI applications.
 
 ## Table of contents
 - [CareSync User Guide](#caresync-user-guide)
@@ -71,7 +71,7 @@ Java HotSpot(TM) 64-Bit Server VM (build 17.0.17+8-LTS-360, mixed mode, sharing)
 3. Open a command terminal and navigate (`cd`) to the folder you placed `CareSync.jar` .
 
 4. In the command terminal, enter `java -jar CareSync.jar` to run the application.<br>
-   A GUI similar to the below should appear in a few seconds. There will be some sample data in the application to get you started!.<br>
+   A GUI similar to the below should appear in a few seconds. There will be some sample data in the application to get you started!<br>
    ![Ui](images/Ui.png)
 
 ### Step 3 - Get Started!
@@ -269,18 +269,18 @@ Format:
 
 **Name search rules:**
 * Name search is case-insensitive. e.g., `hans` will match `Hans`
-* Name search finds names that **starts with** the provided name keyword.
+* Name search finds names that **start with** the provided name keyword.
 * Multiple name keywords are treated separately.
   * `find n/Ale Ber` will match `Alex` and `Bernice`
 
 **Tag search rules:**
 * Tag search is case-insensitive. e.g., `FAMILY` will match `family`
-* Tag search finds tags that **starts with** the provided tag keyword.
+* Tag search finds tags that **start with** the provided tag keyword.
 * Only **one tag** can be searched at a time.
 
 **Date search rules:**
 * For date ranges, both `sd/` (start date) and `ed/` (end date) prefixes are required.
-  * `ed/`can be specified first before `sd/`. i.e, `find ed/END_DATE sd/START_DATE` is also valid.
+  * `ed/` can be specified first before `sd/`. i.e, `find ed/END_DATE sd/START_DATE` is also valid.
 * Date specified in `ed/` (end date) must be later than or equal to date specified in `sd/` (start date).
 </box>
 
@@ -362,7 +362,7 @@ Format: `delete INDEX [MORE INDEXES or RANGES]…`
 
 Examples:
 * `list` followed by `delete 2` deletes the 2nd contact in CareSync.
-* `find Betsy` followed by `delete 1` deletes the 1st contact in the results of the `find` command.
+* `find n/Betsy` followed by `delete 1` deletes the 1st contact in the results of the `find` command.
 
 <box type="tip" seamless>
 
@@ -461,8 +461,8 @@ CareSync data is saved automatically as a JSON file `[JAR file location]/data/ad
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, CareSync will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
-Furthermore, certain edits can cause the CareSync to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
+If your changes to the data file make its format invalid, CareSync will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
+Furthermore, certain edits can cause CareSync to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
 --------------------------------------------------------------------------------------------------------------------
@@ -507,7 +507,7 @@ Action     | Format                                                             
 
 **Additional Info:**
 - Parameter fields will be trimmed (i.e. whitespaces (` `) at the start and end will be removed)
-- Empty paramters used in `edit` and `note` will attempt to clear the respective field
+- Empty parameters used in `edit` and `note` will attempt to clear the respective field
 </box>
 
 - **INDEX**: Refers to the index number shown in the displayed contact list.
